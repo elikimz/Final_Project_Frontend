@@ -8,7 +8,7 @@ const Book = () => {
     duration: "",
   });
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
@@ -29,10 +29,10 @@ const Book = () => {
           </nav>
         </div>
       </header>
-      
+
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Browse Vehicles</h2>
-        
+
         {/* Filters Section */}
         <div className="flex space-x-4 mb-6">
           <select name="category" className="p-2 border rounded" onChange={handleFilterChange}>
@@ -50,57 +50,70 @@ const Book = () => {
             <option value="7">1 Week</option>
           </select>
         </div>
-        
+
         {/* Vehicle List/Grid Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {/* Example Vehicle Card */}
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <img src="src/assets/car1.jpg" alt="Vehicle" className="rounded-lg mb-4" />
             <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
             <p className="text-gray-700 mb-2">Short Description</p>
             <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-              Book Now
-            </Link><br></br>
-
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
-            <p className="text-gray-700 mb-2">Short Description</p>
-            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-              Book Now
-            </Link>
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
-            <p className="text-gray-700 mb-2">Short Description</p>
-            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-              Book Now
-            </Link>
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
-            <p className="text-gray-700 mb-2">Short Description</p>
-            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-              Book Now
-            </Link>
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
-            <p className="text-gray-700 mb-2">Short Description</p>
-            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-              Book Now
-            </Link>
-            <img src="/path/to/vehicle-image.jpg" alt="Vehicle" className="rounded-lg mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
-            <p className="text-gray-700 mb-2">Short Description</p>
-            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
-            <Link to="/vehicle-details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
               Book Now
             </Link>
           </div>
-          
+
           {/* Add more vehicle cards as needed */}
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img src="src/assets/car2.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
+            <p className="text-gray-700 mb-2">Short Description</p>
+            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+              Book Now
+            </Link>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img src="src/assets/photo-15.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
+            <p className="text-gray-700 mb-2">Short Description</p>
+            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+              Book Now
+            </Link>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img src="src/assets/car1.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
+            <p className="text-gray-700 mb-2">Short Description</p>
+            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+              Book Now
+            </Link>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img src="src/assets/car1.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
+            <p className="text-gray-700 mb-2">Short Description</p>
+            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+              Book Now
+            </Link>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <img src="src/assets/car1.jpg" alt="Vehicle" className="rounded-lg mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Vehicle Name</h3>
+            <p className="text-gray-700 mb-2">Short Description</p>
+            <p className="text-gray-700 mb-2">Rental Rate: $50/day</p>
+            <Link to="/vehicle_details" className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+              Book Now
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,10 +1,11 @@
 
-import { Container } from "lucide-react"
+//import { Container } from "lucide-react";
+import Users from "../Features/users/usersTable";
 function Dashboard() {
     return (
-      <Container className='grid grid-cols-1 place-items-center gap-2'>
-         Dashboard
-      </Container>
+    
+         <Users/>
+     
     )
   }
   

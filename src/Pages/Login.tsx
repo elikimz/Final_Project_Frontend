@@ -68,11 +68,11 @@ const Login = () => {
               </div>
 
               {/* Uncomment below to add "Forgot your password?" link */}
-              {/* <div className="text-sm">
+               <div className="text-sm">
                 <Link to="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
                 </Link>
-              </div> */}
+              </div> 
             </div>
 
             <div>

@@ -7,6 +7,8 @@ import Dashboard from './Dashboard/Dashboard'
 import About from './Pages/About'
 import Login from './Pages/Login'
 import Book from './Pages/Book Now'
+import  VehicleDetails from './Pages/Vehicle Details'
+import  Booking_form from './Pages/Booking Form'
 
 
 
@@ -48,10 +50,26 @@ import Book from './Pages/Book Now'
         path: 'Book Now',
         element: <Book />,
         errorElement: <Error />,
+      },
+
+      {
+        path: 'vehicle_details',
+        element: <VehicleDetails />,
+        errorElement: <Error />,
+      },
+      {
+        path: 'Booking_Form',
+        element: <Booking_form />,
+        errorElement: <Error />,
       }
    
    
    
+   
+   
+   
+   
+      
    
    
     ]);
