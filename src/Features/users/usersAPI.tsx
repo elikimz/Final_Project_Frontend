@@ -14,7 +14,7 @@ export const UserAPI = createApi({
     endpoints: (builder) => ({
         getUsers: builder.query<User[], void>({
             query: () => 'users',
-            // providesTags: ['getUsersTag'],
+            //  providesTags: ['getUsersTag'],
         }),
         createUser: builder.mutation<User, Partial<User>>({
             query: (newUser) => ({

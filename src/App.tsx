@@ -9,6 +9,7 @@ import Login from './Pages/Login'
 import Book from './Pages/Book Now'
 import  VehicleDetails from './Pages/Vehicle Details'
 import  Booking_form from './Pages/Booking Form'
+import ProfileManagement from './Features/register/Profilemanagement'
 
 
 
@@ -61,7 +62,13 @@ import  Booking_form from './Pages/Booking Form'
         path: 'Booking_Form',
         element: <Booking_form />,
         errorElement: <Error />,
+      },
+      {
+        path: 'profilemanagement',
+        element: <ProfileManagement/>,
+        errorElement: <Error />,
       }
+   
    
    
    
