@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUpdateUserMutation } from '../users/usersAPI'; // Adjust the import path as needed
 
 const ProfileManagement = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const ProfileManagement = () => {
     newPassword: '',
     confirmPassword: '',
   });
+
+  const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation(); // Mutation hook
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -30,9 +33,15 @@ const ProfileManagement = () => {
     });
   };
 
-  const handleUpdateProfile = () => {
-    // Handle update profile logic here
-    console.log('Updating profile with:', formData);
+  const handleUpdateProfile = async () => {
+    try {
+      await updateUser(formData).unwrap();
+      console.log('Profile updated successfully:', formData);
+      // Optionally, reset form data or show a success message
+    } catch (err) {
+      console.error('Failed to update profile:', err);
+      // Handle error state, display error message
+    }
   };
 
   const handleChangePassword = () => {
@@ -109,8 +118,9 @@ const ProfileManagement = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={handleUpdateProfile}
+            disabled={isLoading} // Disable button during loading state
           >
-            Update Profile
+            {isLoading ? 'Updating...' : 'Update Profile'}
           </button>
         </div>
       </form>

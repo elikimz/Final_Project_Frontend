@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { useRegisterUserMutation } from '../Features/register/RegisterAPI'; // Adjust the import path as needed
+import { useRegisterUserMutation } from '../register/RegisterAPI'; // Adjust the import path as needed
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({

@@ -23,7 +23,7 @@ export const UserAPI = createApi({
                 body: newUser,
                 providesTags: ['createUserTags'],
             }),
-            invalidatesTags: ['getUsersTag'],
+           // invalidatesTags: ['getUsersTag'],
         }),
         deleteUser: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
@@ -31,7 +31,7 @@ export const UserAPI = createApi({
                 method: 'DELETE',
                 providesTags: ['deleteUserTags'],
             }),
-            invalidatesTags: ['getUsersTag'],
+           // invalidatesTags: ['getUsersTag'],
         }),
         updateUser: builder.mutation<User, Partial<User>>({
             query: ({ id, ...rest }) => ({
@@ -40,7 +40,7 @@ export const UserAPI = createApi({
                 body: rest,
                 providesTags: ['updateUserTags'],
             }),
-            invalidatesTags: ['getUsersTag'],
+           // invalidatesTags: ['getUsersTag'],
         }),
     }),
 });

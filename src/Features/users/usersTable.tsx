@@ -10,7 +10,7 @@ function Users() {
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -57,14 +57,11 @@ function Users() {
     if (selectedUser) {
       await updateUser({ id: selectedUser.id, ...formData });
       setUpdateSuccess(true); // Set update success message
-      setTimeout(() => setUpdateSuccess(false), 3000); // Clear update success message after 3 seconds
+      setTimeout(() => {
+        setUpdateSuccess(false);
+        closeModal(); // Close modal upon successful update
+      }, 3000); // Clear update success message after 3 seconds
       refetch();
-      setFormData({  // Reset form data to empty values after successful update
-        full_name: '',
-        email: '',
-        contact_phone: '',
-        address: '',
-      });
     }
   };
 
@@ -114,7 +111,7 @@ function Users() {
               {isLoading ? (
                 <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">Loading...</td></tr>
               ) : isError ? (
-                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-red-700">{error?.data?.length === 0 ? 'No data' : 'Error'}</td></tr>
+                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-red-700"></td></tr>
               ) : (
                 userData?.map((user, index) => (
                   <tr key={user.id} className={`bg-${index % 2 === 0 ? 'white' : 'blue-100'} hover:bg-yellow-100`}>
@@ -217,19 +214,19 @@ function Users() {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex justify-end">
               <button
                 type="button"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleUpdate}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
                 disabled={isUpdating}
               >
                 {isUpdating ? 'Updating...' : 'Update'}
               </button>
               <button
                 type="button"
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={closeModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2"
               >
                 Cancel
               </button>
@@ -237,6 +234,13 @@ function Users() {
           </form>
         </div>
       </Modal>
+
+      {/* Delete Success Message */}
+      {deleteSuccess && (
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 fixed top-0 left-0 right-0" role="alert">
+          <p className="font-bold">User Deleted Successfully</p>
+        </div>
+      )}
     </div>
   );
 }
