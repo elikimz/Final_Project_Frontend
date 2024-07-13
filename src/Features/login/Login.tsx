@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./login.API"; // Adjust the path accordingly
 
 const Login = () => {
@@ -8,6 +8,7 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState(""); // State for success message
   const [error, setError] = useState(""); // State for error message
   const [mutate, { isLoading }] = useLoginUserMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -21,6 +22,9 @@ const Login = () => {
         setSuccessMessage("Login successful!"); // Update success message state
         // Redirect or perform any action after successful login
         console.log("Login successful");
+        setTimeout(() => {
+          navigate("/dashboard"); // Redirect to the desired page
+        }, 1000); // Optional delay before redirecting
       }
     } catch (err) {
       console.error("Login failed:", err);
