@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.16.1",
     "@reduxjs/toolkit": "^2.2.6",
+    "axios": "^1.7.2",
     "front-end-project": "link:",
     "lucide-react": "^0.402.0",
     "react": "^18.3.1",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-modal": "^3.16.3",
     "@types/redux-persist": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",

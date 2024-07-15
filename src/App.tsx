@@ -67,7 +67,13 @@ import ProfileManagement from './Features/register/Profilemanagement'
         path: 'profilemanagement',
         element: <ProfileManagement/>,
         errorElement: <Error />,
+      },
+      {
+        path: 'carspecifications',
+        element: <carspecifications/>,
+        errorElement: <Error />,
       }
+   
    
    
    

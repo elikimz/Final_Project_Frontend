@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { useRegisterUserMutation } from '../register/RegisterAPI'; // Adjust the import path as needed
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRegisterUserMutation } from '../register/RegisterAPI';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -8,12 +8,19 @@ const RegisterForm = () => {
     email: '',
     contact_phone: '',
     address: '',
-    role: 'user', // Setting the role to 'user' by default
+    role: 'user',
     password: '',
     confirmPassword: ''
   });
 
   const [registerUser, { isLoading, isSuccess, isError, error }] = useRegisterUserMutation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/login");
+    }
+  }, [isSuccess, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,7 +39,7 @@ const RegisterForm = () => {
     }
 
     try {
-      await registerUser(formData).unwrap();
+      const response = await registerUser(formData).unwrap();
       alert("Registration successful!");
       setFormData({
         full_name: '',
@@ -43,7 +50,7 @@ const RegisterForm = () => {
         password: '',
         confirmPassword: ''
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to register: ", err);
       if (err.status === 'PARSING_ERROR') {
         alert(err.data);
@@ -168,7 +175,7 @@ const RegisterForm = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
-                disabled={isLoading} // Disable the button while loading
+                disabled={isLoading}
               >
                 {isLoading ? 'Registering...' : 'Register'}
               </button>
@@ -186,6 +193,63 @@ const RegisterForm = () => {
           )}
         </div>
       </div>
+      <footer className="w-full py-4 bg-white shadow-md mt-auto">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="text-gray-800">
+            &copy; 2024 KimExpress Car Hire. All rights reserved.
+          </div>
+          <div className="flex space-x-4">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6 text-gray-800 hover:text-gray-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18 2h3v4h-3V2zM12 2h3v4h-3V2zM6 2h3v4H6V2zM2 8h20v12H2V8zM16 12h2v2h-2v-2zM10 12h2v2h-2v-2zM6 12h2v2H6v-2z"
+                />
+              </svg>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6 text-gray-800 hover:text-gray-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M22.46 6c-.77.35-1.5.59-2.28.7.83-.5 1.47-1.28 1.76-2.2-.77.47-1.63.8-2.54.98a4.45 4.45 0 0 0-7.55 4.05 12.59 12.59 0 0 1-9.1-4.6 4.45 4.45 0 0 0 1.38 5.95c-.67-.03-1.3-.21-1.85-.52v.05a4.45 4.45 0 0 0 3.57 4.35c-.58.16-1.2.19-1.83.07a4.45 4.45 0 0 0 4.16 3.1 8.95 8.95 0 0 1-5.56 1.92c-.36 0-.72-.02-1.08-.06A12.64 12.64 0 0 0 7.44 21c8.3 0 12.83-6.88 12.83-12.84 0-.2 0-.41-.02-.61A9.1 9.1 0 0 0 22.46 6z"
+                />
+              </svg>
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6 text-gray-800 hover:text-gray-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 12a5 5 0 1 1 10 0 5 5 0 0 1-10 0zM12 2.3a9.7 9.7 0 0 1 9.7 9.7 9.7 0 0 1-9.7 9.7A9.7 9.7 0 0 1 2.3 12 9.7 9.7 0 0 1 12 2.3zm0 1.4a8.3 8.3 0 1 0 8.3 8.3 8.3 8.3 0 0 0-8.3-8.3z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

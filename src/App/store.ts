@@ -5,6 +5,8 @@ import { UserAPI } from '../Features/users/usersAPI';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist/es/constants';
 import { registerAPI } from '../Features/register/RegisterAPI'
 import { loginAPI } from "../Features/login/login.API";
+import { SpecsAPI } from "../Features/cars_specifications/spectAPI";
+
 
 const persistConfig = {
     key: 'root',
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
     [UserAPI.reducerPath]: UserAPI.reducer,
     [registerAPI.reducerPath]: registerAPI.reducer,
     [loginAPI.reducerPath]: loginAPI.reducer,
+    [SpecsAPI.reducerPath] : SpecsAPI.reducer
+    
     // Add other reducers here
 });
 
@@ -27,7 +31,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware),
+        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware ,SpecsAPI.middleware),
 });
 
 export const persistor = persistStore(store);

@@ -17,7 +17,7 @@ const ProfileManagement = () => {
 
   const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation(); // Mutation hook
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -25,7 +25,7 @@ const ProfileManagement = () => {
     });
   };
 
-  const handlePasswordChange = (e: { target: { name: any; value: any; }; }) => {
+  const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData({
       ...passwordData,
@@ -50,7 +50,7 @@ const ProfileManagement = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
       <h2 className="text-3xl font-bold mb-6 text-center text-blue-500">My Profile</h2>
       <form>
         <div className="mb-4">
@@ -125,7 +125,7 @@ const ProfileManagement = () => {
         </div>
       </form>
       <div className="mt-6">
-        <h3 className="text-xl font-bold mb-2 text-gray-800">Change Password</h3>
+        <h3 className="text-2xl font-bold mb-2 text-gray-800">Change Password</h3>
         <form>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="currentPassword">

@@ -1,35 +1,33 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./login.API"; // Adjust the path accordingly
+import { CircularProgress } from '@mui/material'; // Make sure to install @mui/material if not already
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
   const [error, setError] = useState(""); // State for error message
   const [mutate, { isLoading }] = useLoginUserMutation();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const result = await mutate({ email, password });
       if (result.error) {
         setError("Invalid email or password. Please try again."); // Set error message for incorrect credentials
-        setSuccessMessage(""); // Clear success message if any
       } else {
         setError("");
-        setSuccessMessage("Login successful!"); // Update success message state
-        // Redirect or perform any action after successful login
         console.log("Login successful");
+        setEmail(""); // Reset email field
+        setPassword(""); // Reset password field
         setTimeout(() => {
           navigate("/dashboard"); // Redirect to the desired page
-        }, 1000); // Optional delay before redirecting
+        }, 400); // Optional delay before redirecting
       }
     } catch (err) {
       console.error("Login failed:", err);
       setError("Failed to login. Please try again.");
-      setSuccessMessage(""); // Clear success message if any
     }
   };
 
@@ -117,16 +115,9 @@ const Login = () => {
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign in'}
               </button>
             </div>
-
-            {/* Display success message on successful login */}
-            {successMessage && !error && (
-              <div className="text-green-500 text-center mt-4">
-                {successMessage}
-              </div>
-            )}
 
             {/* Display alert on login failure */}
             {error && (

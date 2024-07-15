@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Ensure you have react-router-dom installed and imported
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useGetUsersQuery, useUpdateUserMutation, useDeleteUserMutation, User } from './usersAPI';
+import { useLogoutMutation } from '../login/login.API';
 
-Modal.setAppElement('#root'); // Set the app root element for accessibility
+Modal.setAppElement('#root');
 
 function Users() {
-  const { data: userData, isLoading, isError, error, refetch } = useGetUsersQuery();
+  const navigate = useNavigate();
+  const { data: userData, isLoading, isError, refetch } = useGetUsersQuery();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
@@ -17,11 +20,11 @@ function Users() {
     contact_phone: '',
     address: '',
   });
-  const [updateSuccess, setUpdateSuccess] = useState(false); // State for update success message
-  const [deleteSuccess, setDeleteSuccess] = useState(false); // State for delete success message
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   useEffect(() => {
-    refetch(); // Force refetch on component mount
+    refetch();
   }, [refetch]);
 
   const openModal = (user: User) => {
@@ -33,14 +36,14 @@ function Users() {
       address: user.address,
     });
     setModalIsOpen(true);
-    setUpdateSuccess(false); // Reset update success message on modal open
+    setUpdateSuccess(false);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
     setSelectedUser(null);
-    setUpdateSuccess(false); // Reset update success message on modal close
-    setFormData({  // Reset form data to empty values on modal close
+    setUpdateSuccess(false);
+    setFormData({
       full_name: '',
       email: '',
       contact_phone: '',
@@ -56,45 +59,103 @@ function Users() {
   const handleUpdate = async () => {
     if (selectedUser) {
       await updateUser({ id: selectedUser.id, ...formData });
-      setUpdateSuccess(true); // Set update success message
+      setUpdateSuccess(true);
       setTimeout(() => {
         setUpdateSuccess(false);
-        closeModal(); // Close modal upon successful update
-      }, 3000); // Clear update success message after 3 seconds
+        closeModal();
+      }, 1000);
       refetch();
     }
   };
 
   const handleDelete = async (id: number) => {
     await deleteUser(id);
-    setDeleteSuccess(true); // Set delete success message
-    setTimeout(() => setDeleteSuccess(false), 3000); // Clear delete success message after 3 seconds
+    setDeleteSuccess(true);
+    setTimeout(() => setDeleteSuccess(false), 3000);
     refetch();
   };
 
-  console.log('Fetched User Data:', userData);
+  const handleLogout = async () => {
+    await logout({});
+    navigate('/login'); // Navigate to the login page after logging out
+  };
+
+  const handleNavigateToCurrentBookings = () => {
+    navigate('/profilemanagement'); // Navigate to the current bookings page
+  };
+
+  const handleNavigateToBookingHistory = () => {
+    navigate('/profilemanagement'); // Navigate to the booking history page
+  };
+
+  const handleNavigateToAccountSettings = () => {
+    navigate('/profilemanagement'); // Navigate to the account settings page
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="w-full py-4 bg-white shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-gray-800">KimExpress Car Hire</div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li><Link to="/" className="text-gray-800 hover:text-gray-600">Home</Link></li>
-              <li><Link to="/about" className="text-gray-800 hover:text-gray-600">About</Link></li>
-              <li><Link to="/contact" className="text-gray-800 hover:text-gray-600">Contact</Link></li>
-              <li><Link to="/register" className="text-gray-800 hover:text-gray-600">Register</Link></li>
-              <li><Link to="/login" className="text-gray-800 hover:text-gray-600">Login</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen flex">
+      {/* Sidebar Navigation */}
+      <aside className="w-1/4 bg-green-900 shadow-md text-white p-4">
+        <div className="text-2xl font-bold mb-8">Dashboard</div>
+        <nav>
+          <ul className="space-y-4">
+            <li>
+              <button
+                onClick={handleNavigateToCurrentBookings}
+                className="text-white hover:text-gray-400"
+              >
+                Current Bookings
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleNavigateToBookingHistory}
+                className="text-white hover:text-gray-400"
+              >
+                Booking History
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleNavigateToAccountSettings}
+                className="text-white hover:text-gray-400"
+              >
+                Account Settings
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="text-white hover:text-gray-400"
+                disabled={isLoggingOut}
+              >
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-      {/* Users Table */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="overflow-x-auto shadow-lg rounded-lg">
+      {/* Main Content */}
+      <div className="w-3/4 p-4">
+        {/* Overview Section */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-green-100 shadow-md rounded-lg p-4">
+            <h3 className="text-lg font-bold">Current Bookings</h3>
+            <p>Summary of current bookings...</p>
+          </div>
+          <div className="bg-blue-100 shadow-md rounded-lg p-4">
+            <h3 className="text-lg font-bold">Booking History</h3>
+            <p>Summary of past bookings...</p>
+          </div>
+          <div className="bg-purple-100 shadow-md rounded-lg p-4">
+            <h3 className="text-lg font-bold">Account Settings</h3>
+            <p>Summary of account settings...</p>
+          </div>
+        </div>
+
+        {/* Users Table */}
+        <div className="overflow-x-auto shadow-lg rounded-lg mb-8">
           <table className="min-w-full divide-y divide-blue-200">
             <thead className="bg-blue-500 text-white">
               <tr>
@@ -142,105 +203,97 @@ function Users() {
             </tbody>
           </table>
         </div>
+
+        {/* Modal */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Update User"
+          className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+        >
+          <div className="bg-white rounded-lg p-8 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4">Update User</h2>
+
+            {updateSuccess && (
+              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                <p>Update successful!</p>
+              </div>
+            )}
+
+            <form>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="full_name">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="full_name"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="email"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_phone">
+                  Contact Phone
+                </label>
+                <input
+                  type="text"
+                  name="contact_phone"
+                  value={formData.contact_phone}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="contact_phone"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="address"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={handleUpdate}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  disabled={isUpdating}
+                >
+                  {isUpdating ? 'Updating...' : 'Update'}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </Modal>
       </div>
-
-      {/* Modal */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Update User"
-        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
-      >
-        <div className="bg-white rounded-lg p-8 max-w-md mx-auto">
-          <h2 className="text-xl font-bold mb-4">Update User</h2>
-
-          {/* Update Success Message */}
-          {updateSuccess && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-              <p className="font-bold">User Updated Successfully</p>
-            </div>
-          )}
-
-          <form>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="full_name">
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="full_name"
-                name="full_name"
-                value={formData.full_name}
-                onChange={handleInputChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_phone">
-                Contact Phone
-              </label>
-              <input
-                type="text"
-                id="contact_phone"
-                name="contact_phone"
-                value={formData.contact_phone}
-                onChange={handleInputChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
-                Address
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleUpdate}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-                disabled={isUpdating}
-              >
-                {isUpdating ? 'Updating...' : 'Update'}
-              </button>
-              <button
-                type="button"
-                onClick={closeModal}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </Modal>
-
-      {/* Delete Success Message */}
-      {deleteSuccess && (
-        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 fixed top-0 left-0 right-0" role="alert">
-          <p className="font-bold">User Deleted Successfully</p>
-        </div>
-      )}
     </div>
   );
 }
