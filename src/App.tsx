@@ -13,6 +13,7 @@ import ProfileManagement from './Features/register/Profilemanagement'
 
 
 
+
   const App: React.FC = () => {
     const router = createBrowserRouter([
       {
@@ -68,11 +69,9 @@ import ProfileManagement from './Features/register/Profilemanagement'
         element: <ProfileManagement/>,
         errorElement: <Error />,
       },
-      {
-        path: 'carspecifications',
-        element: <carspecifications/>,
-        errorElement: <Error />,
-      }
+      
+
+
    
    
    

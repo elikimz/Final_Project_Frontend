@@ -10,7 +10,7 @@ const Login = () => {
   const [mutate, { isLoading }] = useLoginUserMutation();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
       const result = await mutate({ email, password });

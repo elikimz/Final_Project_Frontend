@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUpdateUserMutation } from '../users/usersAPI'; // Adjust the import path as needed
 
 const ProfileManagement = () => {
@@ -17,7 +17,9 @@ const ProfileManagement = () => {
 
   const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation(); // Mutation hook
 
-  const handleChange = (e) => {
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -25,7 +27,7 @@ const ProfileManagement = () => {
     });
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setPasswordData({
       ...passwordData,
@@ -37,20 +39,34 @@ const ProfileManagement = () => {
     try {
       await updateUser(formData).unwrap();
       console.log('Profile updated successfully:', formData);
-      // Optionally, reset form data or show a success message
+      setMessage({ type: 'success', text: 'Profile updated successfully' });
     } catch (err) {
       console.error('Failed to update profile:', err);
-      // Handle error state, display error message
+      setMessage({ type: 'error', text: 'Failed to update profile' });
     }
   };
 
   const handleChangePassword = () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setMessage({ type: 'error', text: 'Passwords do not match' });
+      return;
+    }
     // Handle change password logic here
     console.log('Changing password with:', passwordData);
+    setMessage({ type: 'success', text: 'Password changed successfully' });
   };
 
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ type: '', text: '' });
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   return (
-    <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+    <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 relative">
       <h2 className="text-3xl font-bold mb-6 text-center text-blue-500">My Profile</h2>
       <form>
         <div className="mb-4">
@@ -183,6 +199,13 @@ const ProfileManagement = () => {
           </div>
         </form>
       </div>
+      {message.text && (
+        <div className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50`}>
+          <div className={`text-xl font-bold ${message.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+            {message.text}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

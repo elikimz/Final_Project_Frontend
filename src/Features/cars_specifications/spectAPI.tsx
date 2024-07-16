@@ -15,10 +15,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const SpecsAPI = createApi({
     reducerPath: 'SpecsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: ' http://localhost:8000' }),
     endpoints: (builder) => ({
         getVehicleSpecifications: builder.query<Specifications[], void>({
-            query: () => 'VehicleSpecifications',
+            query: () => 'vehicalspecification',
             //  providesTags: ['getVehicleSpecificationsTag'],
         }),
         createSpecifications: builder.mutation<Specifications, Partial<Specifications>>({
