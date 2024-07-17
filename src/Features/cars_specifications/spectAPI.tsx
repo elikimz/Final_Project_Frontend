@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
- export interface Specifications {
+ export interface Specification {
     id: number;
     manufacturer: string ;
     model: string ;
@@ -15,13 +15,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const SpecsAPI = createApi({
     reducerPath: 'SpecsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: ' http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
     endpoints: (builder) => ({
-        getVehicleSpecifications: builder.query<Specifications[], void>({
+        getVehicleSpecification: builder.query<Specification[], void>({
             query: () => 'vehicalspecification',
             //  providesTags: ['getVehicleSpecificationsTag'],
         }),
-        createSpecifications: builder.mutation<Specifications, Partial<Specifications>>({
+        createSpecification: builder.mutation<Specification, Partial<Specification>>({
             query: (newSpecifications) => ({
                 url: 'vehicalspecification',
                 method: 'POST',
@@ -30,15 +30,15 @@ export const SpecsAPI = createApi({
             }),
            // invalidatesTags: ['getUsersTag'],
         }),
-        deleteSpecifications: builder.mutation<{ success: boolean }, number>({
+        deleteSpecification: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
-                url: `vehicalspecification/${id}`,
+                url: `vehicalspecifications/${id}`,
                 method: 'DELETE',
                 providesTags: ['deleteSpecificationsTags'],
             }),
            // invalidatesTags: ['getUsersTag'],
         }),
-        updateSpecifications: builder.mutation<Specifications, Partial<Specifications>>({
+        updateSpecification: builder.mutation<Specification, Partial<Specification>>({
             query: ({ id, ...rest }) => ({
                 url: `vehicalspecification/${id}`,
                 method: 'PUT',
@@ -47,7 +47,7 @@ export const SpecsAPI = createApi({
             }),
            // invalidatesTags: ['getUsersTag'],
         }),
-    }),
+   }),
 });
 
-export const { useGetVehicleSpecificationsQuery, useCreateSpecificationsMutation, useDeleteSpecificationsMutation, useUpdateSpecificationsMutation } = SpecsAPI;
+ export const { useGetVehicleSpecificationQuery, useCreateSpecificationMutation, useDeleteSpecificationMutation, useUpdateSpecificationMutation } = SpecsAPI;

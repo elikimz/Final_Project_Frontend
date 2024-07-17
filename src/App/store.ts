@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
     [UserAPI.reducerPath]: UserAPI.reducer,
     [registerAPI.reducerPath]: registerAPI.reducer,
     [loginAPI.reducerPath]: loginAPI.reducer,
-    [SpecsAPI.reducerPath] : SpecsAPI.reducer
+    [SpecsAPI.reducerPath] : SpecsAPI.reducer,
     
     // Add other reducers here
 });

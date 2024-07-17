@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home  from './Pages/Home'
-import Register from './Pages/Register'
+import Register from './Features/register/Register'
 import Error from './Pages/Error'
 import Contact from './Pages/Contact'
 import Dashboard from './Dashboard/Dashboard'
@@ -10,6 +10,7 @@ import Book from './Pages/Book Now'
 import  VehicleDetails from './Pages/Vehicle Details'
 import  Booking_form from './Pages/Booking Form'
 import ProfileManagement from './Features/register/Profilemanagement'
+import  SpecsForm from './Features/cars_specifications/specForm'
 
 
 
@@ -70,7 +71,12 @@ import ProfileManagement from './Features/register/Profilemanagement'
         errorElement: <Error />,
       },
       
-
+      {
+        path: 'SpecsForm',
+        element: <SpecsForm/>,
+        errorElement: <Error />,
+      },
+      
 
    
    
