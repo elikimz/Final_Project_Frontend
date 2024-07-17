@@ -14,6 +14,7 @@ interface VehicleSpecification {
   seating_capacity: number;
   color: string;
   features: string;
+  image_url: string; // Add image_url field
 }
 
 function SpecsForm() {
@@ -23,15 +24,15 @@ function SpecsForm() {
   const [deleteSpecification] = useDeleteSpecificationMutation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentSpec, setCurrentSpec] = useState<VehicleSpecification | null>(null); // Initialize as null
+  const [currentSpec, setCurrentSpec] = useState<VehicleSpecification | null>(null);
 
   const openModalForUpdate = (spec: VehicleSpecification) => {
-    setCurrentSpec(spec); // `spec` here is assumed to have `id` and other required fields
+    setCurrentSpec(spec);
     setIsModalOpen(true);
   };
 
   const openModalForCreate = () => {
-    setCurrentSpec(null); // Reset to null for creating new specification
+    setCurrentSpec(null);
     setIsModalOpen(true);
   };
 
@@ -98,6 +99,7 @@ function SpecsForm() {
                 </div>
               </div>
               <div className="p-4 bg-white">
+                <img src={spec.image_url} alt={`${spec.manufacturer} ${spec.model}`} className="w-full h-40 object-cover mb-4" />
                 <p><strong>Fuel Type:</strong> {spec.fuel_type}</p>
                 <p><strong>Engine Capacity:</strong> {spec.engine_capacity}</p>
                 <p><strong>Transmission:</strong> {spec.transmission}</p>
@@ -118,98 +120,128 @@ function SpecsForm() {
                 e.preventDefault();
                 handleCreateOrUpdate(currentSpec as VehicleSpecification);
               }}
+              className="flex flex-wrap -mx-2"
             >
-              <label className="block mb-2">
-                Manufacturer:
-                <input
-                  type="text"
-                  value={currentSpec?.manufacturer || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Model:
-                <input
-                  type="text"
-                  value={currentSpec?.model || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, model: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Year:
-                <input
-                  type="number"
-                  value={currentSpec?.year || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, year: +e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Fuel Type:
-                <input
-                  type="text"
-                  value={currentSpec?.fuel_type || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, fuel_type: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Engine Capacity:
-                <input
-                  type="text"
-                  value={currentSpec?.engine_capacity || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Transmission:
-                <input
-                  type="text"
-                  value={currentSpec?.transmission || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, transmission: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Seating Capacity:
-                <input
-                  type="number"
-                  value={currentSpec?.seating_capacity || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Color:
-                <input
-                  type="text"
-                  value={currentSpec?.color || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, color: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <label className="block mb-2">
-                Features:
-                <input
-                  type="text"
-                  value={currentSpec?.features || ''}
-                  onChange={(e) => setCurrentSpec({ ...currentSpec!, features: e.target.value })}
-                  className="block w-full mt-1 border rounded px-2 py-1"
-                  required
-                />
-              </label>
-              <div className="flex justify-end mt-4">
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Manufacturer:
+                  <input
+                    type="text"
+                    value={currentSpec?.manufacturer || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Model:
+                  <input
+                    type="text"
+                    value={currentSpec?.model || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, model: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Year:
+                  <input
+                    type="number"
+                    value={currentSpec?.year || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, year: +e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Fuel Type:
+                  <input
+                    type="text"
+                    value={currentSpec?.fuel_type || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, fuel_type: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Engine Capacity:
+                  <input
+                    type="text"
+                    value={currentSpec?.engine_capacity || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Transmission:
+                  <input
+                    type="text"
+                    value={currentSpec?.transmission || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, transmission: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Seating Capacity:
+                  <input
+                    type="number"
+                    value={currentSpec?.seating_capacity || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Color:
+                  <input
+                    type="text"
+                    value={currentSpec?.color || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, color: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Features:
+                  <input
+                    type="text"
+                    value={currentSpec?.features || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, features: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Image URL:
+                  <input
+                    type="text"
+                    value={currentSpec?.image_url || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, image_url: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
+                  />
+                </label>
+              </div>
+              <div className="w-full flex justify-end mt-4">
                 <button
                   type="button"
                   onClick={closeModal}

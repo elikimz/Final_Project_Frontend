@@ -18,6 +18,8 @@ const Login = () => {
         setError("Invalid email or password. Please try again."); // Set error message for incorrect credentials
       } else {
         setError("");
+        const token = result.data.token; // Extract the token from the response
+        localStorage.setItem("token", token); // Store the token in local storage
         console.log("Login successful");
         setEmail(""); // Reset email field
         setPassword(""); // Reset password field

@@ -2,7 +2,10 @@
 //import { Container } from "lucide-react";
 //  import Users from "../Features/users/usersTable";
 //import AddUserForm from "../Features/users/Adduser";
-import SpecsForm from "../Features/cars_specifications/specForm";
+ import SpecsForm from "../Features/cars_specifications/specForm";
+
+ import BookingForm from '../Pages/Booking Form'
+ // import ProfileManagement from '../Features/register/Profilemanagement'
 
 
 function Dashboard() {
@@ -14,6 +17,7 @@ function Dashboard() {
             
               {/* <Users/> */}
               <SpecsForm/>
+              <BookingForm/>
          </>
     )
   }
