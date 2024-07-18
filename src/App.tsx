@@ -12,6 +12,7 @@ import  Booking_form from './Pages/Booking Form'
 import ProfileManagement from './Features/register/Profilemanagement'
 import  SpecsForm from './Features/cars_specifications/specForm'
 import BookingForm from './Features/Bookings/booking'
+import Vehicle from './Features/Vehicles/vehicle'
 
 
 
@@ -82,12 +83,18 @@ import BookingForm from './Features/Bookings/booking'
         element: <BookingForm/>,
         errorElement: <Error />,
       },
+      {
+        path: 'vehicles',
+        element: <Vehicle/>,
+        errorElement: <Error />,
+      },
+      
       
 
 
    
    
-   
+        
    
    
    
