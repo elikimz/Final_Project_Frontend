@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
  export interface Specification {
+    image_url: string | undefined;
     id: number;
     manufacturer: string ;
     model: string ;

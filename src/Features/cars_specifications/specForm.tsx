@@ -15,6 +15,8 @@ interface VehicleSpecification {
   color: string;
   features: string;
   image_url: string; // Add image_url field
+  rental_rate :number;
+  availability:boolean;
 }
 
 function SpecsForm() {
