@@ -6,26 +6,39 @@ export interface logInUser {
     password: string;
 }
 
+export interface LoggedInUser {
+    id: number;
+    full_name: string | null;
+    email: string | null;
+    contact_phone: string | null;
+    address: string | null;
+    role: string | null;
+    created_at: Date | null;
+    updated_at: Date | null;
+}
+
 export const loginAPI = createApi({
     reducerPath: 'loginAPI',
-    baseQuery: fetchBaseQuery({ baseUrl:'http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
     endpoints: (builder) => ({
-   loginUser: builder.mutation<logInUser, Partial<logInUser>>({
+        loginUser: builder.mutation<logInUser, Partial<logInUser>>({
             query: (user) => ({
                 url: '/login',
                 method: 'POST',
                 body: user,
             }),
         }),
-        logout: builder.mutation<logInUser, Partial<logInUser>>({
+        logout: builder.mutation<void, Partial<logInUser>>({
             query: (user) => ({
-                url: 'logout',
+                url: '/logout',
                 method: 'POST',
                 body: user,
             }),
         }),
+        getAllLoggedInUsers: builder.query<LoggedInUser[], void>({
+            query: () => '/login',
+        }),
     }),
 });
 
-export const { useLoginUserMutation, useLogoutMutation } = loginAPI;
-
+export const { useLoginUserMutation, useLogoutMutation, useGetAllLoggedInUsersQuery } = loginAPI;

@@ -1,6 +1,9 @@
+
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "./login.API"; // Adjust the path accordingly
+import { useLoginUserMutation,  } from "./login.API"; // Adjust the path accordingly
+import {  useGetUsersQuery } from "../../Features/users/usersAPI"; 
 import { CircularProgress } from '@mui/material'; // Make sure to install @mui/material if not already
 
 const Login = () => {
@@ -8,20 +11,31 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // State for error message
   const [mutate, { isLoading }] = useLoginUserMutation();
+  const { data: usersData, isLoading: usersLoading, error: usersError } = useGetUsersQuery(); // Fetch all users
   const navigate = useNavigate();
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
       const result = await mutate({ email, password });
+      console.log("API response:", result); // Log the entire API response
       if (result.error) {
         setError("Invalid email or password. Please try again."); // Set error message for incorrect credentials
       } else {
         setError("");
-        const { token, userId } = result.data; // Extract the token and userId from the response
-        localStorage.setItem("token", token); // Store the token in local storage
-        localStorage.setItem("userId", userId); // Store the userId in local storage
-        console.log("Login successful");
+        const { token, user } = result.data; // Extract the token and user from the response
+        console.log("Token:", token); // Log the token
+        console.log("User object:", user); // Log the user object
+
+        // Attempt to access the user ID from different possible structures
+        const userId = user?.id || user?.user?.id || user?.data?.id || user?.data?.user?.id;
+        if (userId) {
+          localStorage.setItem("token", token); // Store the token in local storage
+          localStorage.setItem("userId", userId.toString()); // Store the userId in local storage
+          console.log("Login successful", { token, userId }); // Log the token and userId for debugging
+        } else {
+          console.error("User ID is undefined in the response");
+        }
         setEmail(""); // Reset email field
         setPassword(""); // Reset password field
         setTimeout(() => {
@@ -33,6 +47,15 @@ const Login = () => {
       setError("Failed to login. Please try again.");
     }
   };
+
+  // Logging users data
+  console.log("Users data:", usersData);
+  if (usersLoading) {
+    console.log("Loading users...");
+  }
+  if (usersError) {
+    console.error("Error fetching users:", usersError);
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
