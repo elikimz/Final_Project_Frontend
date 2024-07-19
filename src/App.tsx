@@ -6,7 +6,6 @@ import Contact from './Pages/Contact'
 import Dashboard from './Dashboard/Dashboard'
 import About from './Pages/About'
 import Login from './Features/login/Login'
-import Book from './Pages/Book Now'
 import  VehicleDetails from './Pages/Vehicle Details'
 import  Booking_form from './Pages/Booking Form'
 import ProfileManagement from './Features/register/Profilemanagement'
@@ -51,12 +50,6 @@ import Vehicle from './Features/Vehicles/vehicle'
         errorElement: <Error />,
       },
       
-      {
-        path: 'Book Now',
-        element: <Book />,
-        errorElement: <Error />,
-      },
-
       {
         path: 'vehicle_details',
         element: <VehicleDetails />,

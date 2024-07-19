@@ -32,7 +32,7 @@ const Home = () => {
         <div className="bg-white bg-opacity-90 p-10 rounded-lg shadow-lg max-w-xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to KimExpress Car Hire</h1>
           <p className="text-gray-600 mb-8">Your trusted vehicle rental service for all occasions. Book your ride today and experience seamless, stress-free travel.</p>
-          <Link to="/book-now" className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">Book Now</Link>
+          <Link to="/Register" className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">Book Now</Link>
         </div>
       </section>
 

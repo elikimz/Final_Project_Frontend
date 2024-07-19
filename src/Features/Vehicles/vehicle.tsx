@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useGetVehiclesQuery } from './vehicleAPI';
+import Navbar from "../../components/navbar"
 
 interface Vehicles {
     id: number;
@@ -37,10 +38,22 @@ const Vehicles = () => {
     }
 
     return (
+
+        <>
+           <Navbar/>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
             {vehicles && vehicles.map((vehicle: Vehicle) => (
                 <div key={vehicle.id} className="rounded-lg shadow-md overflow-hidden hover:shadow-xl p-4 bg-white">
-                    <h3 className="text-lg font-bold mb-2">{vehicle.vehicleSpecifications.manufacturer} {vehicle.vehicleSpecifications.model}</h3>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-bold">{vehicle.vehicleSpecifications.manufacturer} {vehicle.vehicleSpecifications.model}</h3>
+                        <Link to={`/Booking_form/`} className="bg-blue-500 text-white px-4 py-2 rounded-md inline-block font-bold hover:bg-blue-600">
+                            Book Now
+                        </Link>
+                        <Link to={`//`} className="bg-blue-500 text-white px-4 py-2 rounded-md inline-block font-bold hover:bg-blue-600">
+                            Book Now
+                        </Link>
+                    </div>
                     <img src={vehicle.vehicleSpecifications.image_url} alt={`${vehicle.vehicleSpecifications.manufacturer} ${vehicle.vehicleSpecifications.model}`} className="w-full h-40 object-cover mb-4" />
                     <p><strong>Rental Rate:</strong> {vehicle.rental_rate}</p>
                     <p><strong>Availability:</strong> {vehicle.availability ? 'Available' : 'Unavailable'}</p>
@@ -51,15 +64,10 @@ const Vehicles = () => {
                     <p><strong>Seating Capacity:</strong> {vehicle.vehicleSpecifications.seating_capacity}</p>
                     <p><strong>Color:</strong> {vehicle.vehicleSpecifications.color}</p>
                     <p><strong>Features:</strong> {vehicle.vehicleSpecifications.features}</p>
-                    <Link to={`/vehicle/${vehicle.id}`} className="text-blue-500 hover:underline mt-2 block">
-                        View Details
-                    </Link>
-                    <Link to={`/vehicle/${vehicle.id}/book`} className="text-blue-500 hover:underline mt-2 block">
-                        Book Now
-                    </Link>
                 </div>
             ))}
         </div>
+        </>
     );
 };
 
