@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { useGetBookingQuery, useCreateBookingMutation, useDeleteBookingMutation, useUpdateBookingMutation } from './bookingAPI';
+import React, { useState, useEffect } from 'react';
+import { useGetBookingQuery, useCreateBookingsMutation, useUpdateBookingMutation } from './bookingAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export interface Booking {
-  id: number;
+  id?: number;
+  userId: string;
+  vehicleId: string;
+  locationId: string;
   booking_date: string;
   return_date: string;
   total_amount: string;
@@ -13,22 +16,21 @@ export interface Booking {
 
 function BookingForm() {
   const { data: bookings, isLoading, isError, refetch } = useGetBookingQuery();
-  const [createBooking] = useCreateBookingMutation();
+  const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
-  const [deleteBooking] = useDeleteBookingMutation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true); // Default to true to show the form automatically
   const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
+  const [userId, setUserId] = useState<string>('');
+  const [vehicleId, setVehicleId] = useState<string>('');
+  const [locationId, setLocationId] = useState<string>('');
 
-  const openModalForUpdate = (booking: Booking) => {
-    setCurrentBooking(booking);
-    setIsModalOpen(true);
-  };
-
-  const openModalForCreate = () => {
-    setCurrentBooking(null);
-    setIsModalOpen(true);
-  };
+  useEffect(() => {
+    // Retrieve IDs from local storage
+    setUserId(localStorage.getItem('userId') || '');
+    setVehicleId(localStorage.getItem('vehicleId') || '');
+    setLocationId(localStorage.getItem('locationId') || '');
+  }, []);
 
   const closeModal = () => {
     setCurrentBooking(null);
@@ -38,77 +40,33 @@ function BookingForm() {
   const handleCreateOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (currentBooking?.id) {
-        await updateBooking(currentBooking).unwrap();
-        toast.success('Booking updated successfully');
-      } else {
-        await createBooking(currentBooking).unwrap();
-        toast.success('Booking created successfully');
+      if (currentBooking) {
+        const bookingData = {
+          ...currentBooking,
+          userId,
+          vehicleId,
+          locationId
+        };
+
+        if (currentBooking.id) {
+          await updateBooking(bookingData).unwrap();
+          toast.success('Booking updated successfully');
+        } else {
+          await createBooking(bookingData).unwrap();
+          toast.success('Booking created successfully');
+        }
+        refetch();
+        closeModal();
       }
-      refetch();
-      closeModal();
     } catch (error) {
       console.error('Failed to update/create booking:', error);
       toast.error('Failed to update/create booking');
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteBooking(id).unwrap();
-      toast.success('Booking deleted successfully');
-      refetch();
-    } catch (error) {
-      console.error('Failed to delete booking:', error);
-      toast.error('Failed to delete booking');
-    }
-  };
-
   return (
     <div className="overflow-x-auto">
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={openModalForCreate}
-      >
-        Create New Booking
-      </button>
       <ToastContainer />
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : isError ? (
-        <p>Error loading data.</p>
-      ) : (
-        bookings && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {bookings.map((booking) => (
-              <div
-                key={booking.id}
-                className="rounded-lg shadow-md overflow-hidden hover:shadow-xl bg-gradient-to-br from-purple-400 to-indigo-500 p-4"
-              >
-                <h3 className="text-lg font-bold text-white">
-                  {booking.booking_date} to {booking.return_date}
-                </h3>
-                <p className="text-sm text-white">Total Amount: ${booking.total_amount}</p>
-                <p className="text-sm text-white">Status: {booking.booking_status}</p>
-                <div className="flex justify-between mt-2">
-                  <button
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
-                    onClick={() => openModalForUpdate(booking)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                    onClick={() => handleDelete(booking.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )
-      )}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-4 w-full max-w-lg">

@@ -1,12 +1,13 @@
 
 //import { Container } from "lucide-react";
-   import Users from "../Features/users/usersTable";
+  //import Users from "../Features/users/usersTable";
 //import AddUserForm from "../Features/users/Adduser";
-  import SpecsForm from "../Features/cars_specifications/specForm";
+  //import SpecsForm from "../Features/cars_specifications/specForm";
 
-//import BookingForm from '../Pages/Booking Form'
- // import ProfileManagement from '../Features/register/Profilemanagement'
-   //import Vehicle from '../Features/Vehicles/vehicle'
+//import BookingForm from '../Features/Bookings/booking'
+  import ProfileManagement from '../Features/register/Profilemanagement'
+   import Vehicle from '../Features/Vehicles/vehicle'
+  //  import CreateLocationForm from "../Features/locations/location"
 
 
 
@@ -17,11 +18,13 @@ function Dashboard() {
                    throw new Error("Function not implemented.");
               } }/> */}
             
-              <Users/>
-              <SpecsForm/>
+              {/* <Users/> */}
+              {/* <SpecsForm/> */}
               {/* <BookingForm/> */}
-              {/* <Vehicle/> */}
-           
+               <Vehicle/>
+             
+{/*             
+             <CreateLocationForm/>  */}
          </>
     )
   }

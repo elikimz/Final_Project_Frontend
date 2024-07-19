@@ -1,4 +1,3 @@
-// registerAPI.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const registerAPI = createApi({
@@ -12,7 +11,10 @@ export const registerAPI = createApi({
         body: newUser,
       }),
     }),
+    getUsers: builder.query({
+      query: () => '/users', // Define the endpoint for fetching users
+    }),
   }),
 });
 
-export const { useRegisterUserMutation } = registerAPI;
+export const { useRegisterUserMutation, useGetUsersQuery } = registerAPI;

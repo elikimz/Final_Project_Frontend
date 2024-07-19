@@ -8,6 +8,7 @@ import { loginAPI } from "../Features/login/login.API";
 import { SpecsAPI } from "../Features/cars_specifications/spectAPI";
 import {BookingAPI} from "../Features/Bookings/bookingAPI"
 import {VehicleAPI} from "../Features/Vehicles/vehicleAPI"
+import {LocationAPI} from "../Features/locations/locationAPI"
 
 
 const persistConfig = {
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     [loginAPI.reducerPath]: loginAPI.reducer,
     [SpecsAPI.reducerPath] : SpecsAPI.reducer,
     [BookingAPI.reducerPath]: BookingAPI.reducer,
-    [VehicleAPI.reducerPath] :VehicleAPI.reducer
+    [VehicleAPI.reducerPath] :VehicleAPI.reducer,
+    [LocationAPI.reducerPath] :LocationAPI.reducer
     
     // Add other reducers here
 });
@@ -35,7 +37,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware ,SpecsAPI.middleware ,BookingAPI.middleware ,VehicleAPI.middleware ),
+        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware ,SpecsAPI.middleware ,BookingAPI.middleware ,VehicleAPI.middleware ,LocationAPI.middleware),
 });
 
 export const persistor = persistStore(store);

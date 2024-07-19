@@ -7,11 +7,12 @@ import Dashboard from './Dashboard/Dashboard'
 import About from './Pages/About'
 import Login from './Features/login/Login'
 import  VehicleDetails from './Pages/Vehicle Details'
-import  Booking_form from './Pages/Booking Form'
+import  Booking_form from './Features/Bookings/booking'
 import ProfileManagement from './Features/register/Profilemanagement'
 import  SpecsForm from './Features/cars_specifications/specForm'
 import BookingForm from './Features/Bookings/booking'
-import Vehicle from './Features/Vehicles/vehicle'
+import Vehicles from './Features/Vehicles/vehicle'
+import CreateLocationForm from './Features/locations/location'
 
 
 
@@ -78,9 +79,16 @@ import Vehicle from './Features/Vehicles/vehicle'
       },
       {
         path: 'vehicles',
-        element: <Vehicle/>,
+        element: <Vehicles/>,
         errorElement: <Error />,
       },
+      {
+        path: 'CreateLocationForm',
+        element: <CreateLocationForm/>,
+        errorElement: <Error />,
+      },
+      
+      
       
       
 

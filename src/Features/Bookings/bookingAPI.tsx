@@ -10,13 +10,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const BookingAPI = createApi({
     reducerPath: 'bookingAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/Bookings' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
     endpoints: (builder) => ({
         getBooking: builder.query<Booking[], void>({
             query: () => 'Bookings',
             //  providesTags: ['getUsersTag'],
         }),
-        createBooking: builder.mutation<Booking, Partial<Booking>>({
+        createBookings: builder.mutation<Booking, Partial<Booking>>({
             query: (newBooking) => ({
                 url: 'Bookings',
                 method: 'POST',
@@ -45,4 +45,4 @@ export const BookingAPI = createApi({
     }),
 });
 
-export const { useGetBookingQuery, useCreateBookingMutation, useDeleteBookingMutation, useUpdateBookingMutation } = BookingAPI;
+export const { useGetBookingQuery, useCreateBookingsMutation, useDeleteBookingMutation, useUpdateBookingMutation } = BookingAPI;

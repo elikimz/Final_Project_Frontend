@@ -18,6 +18,11 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      // Extract user ID from response
+      const userId = localStorage.getItem('userId'); // Replace this with actual extraction from response if necessary
+      if (userId) {
+        localStorage.setItem('userId', userId);
+      }
       navigate("/login");
     }
   }, [isSuccess, navigate]);
@@ -41,6 +46,8 @@ const RegisterForm = () => {
     try {
       const response = await registerUser(formData).unwrap();
       alert("Registration successful!");
+      // Save user ID to local storage
+      localStorage.setItem('userId', response.userId); // Adjust based on actual response structure
       setFormData({
         full_name: '',
         email: '',
@@ -243,7 +250,7 @@ const RegisterForm = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M7 12a5 5 0 1 1 10 0 5 5 0 0 1-10 0zM12 2.3a9.7 9.7 0 0 1 9.7 9.7 9.7 0 0 1-9.7 9.7A9.7 9.7 0 0 1 2.3 12 9.7 9.7 0 0 1 12 2.3zm0 1.4a8.3 8.3 0 1 0 8.3 8.3 8.3 8.3 0 0 0-8.3-8.3z"
+                  d="M7 12a5 5 0 1 1 10 0 5 5 0 0 1-10 0zM12 2.3a9.7 9.7 0 0 1 9.7 9.7 9.7 9.7 0 0 1-9.7 9.7A9.7 9.7 0 0 1 2.3 12 9.7 9.7 0 0 1 12 2.3zm0 1.4a8.3 8.3 0 1 0 8.3 8.3 8.3 8.3 0 0 0-8.3-8.3z"
                 />
               </svg>
             </a>

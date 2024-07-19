@@ -18,13 +18,14 @@ const Login = () => {
         setError("Invalid email or password. Please try again."); // Set error message for incorrect credentials
       } else {
         setError("");
-        const token = result.data.token; // Extract the token from the response
+        const { token, userId } = result.data; // Extract the token and userId from the response
         localStorage.setItem("token", token); // Store the token in local storage
+        localStorage.setItem("userId", userId); // Store the userId in local storage
         console.log("Login successful");
         setEmail(""); // Reset email field
         setPassword(""); // Reset password field
         setTimeout(() => {
-          navigate("/dashboard"); // Redirect to the desired page
+          navigate("/Vehicles"); // Redirect to the desired page
         }, 400); // Optional delay before redirecting
       }
     } catch (err) {

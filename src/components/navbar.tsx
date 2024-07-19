@@ -43,12 +43,13 @@ const Navbar = () => {
             </div>
           </div>
           <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+          <li>
+              <Link to="/Dashboard" className="text-black hover:text-gray-300">Dashboard</Link>
+            </li>
             <li>
               <Link to="/profilemanagement" className="text-black hover:text-gray-300">Profile</Link>
             </li>
-            <li>
-              <Link to="/settings" className="text-black hover:text-gray-300">Settings</Link>
-            </li>
+           
             <li>
               <button
                 onClick={handleLogout}
