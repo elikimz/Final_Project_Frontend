@@ -8,8 +8,8 @@ export interface Booking {
   user_id: number;
   vehicle_id: number;
   location_id: number;
-  booking_date: string | null;
-  return_date: string | null;
+  booking_date?: string; // Changed to optional and use string
+  return_date?: string; // Changed to optional and use string
   total_amount: number;
   booking_status: string;
 }
@@ -19,16 +19,16 @@ function BookingForm() {
   const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Start with modal closed
   const [currentBooking, setCurrentBooking] = useState<Booking>({
     user_id: 0,
     vehicle_id: 0,
     location_id: 0,
-    booking_date: null,
-    return_date: null,
+    booking_date: undefined, // Changed to undefined
+    return_date: undefined, // Changed to undefined
     total_amount: 0,
     booking_status: ''
   });
+
   const [userId, setUserId] = useState<number>(0);
   const [vehicleId, setVehicleId] = useState<number>(0);
   const [locationId, setLocationId] = useState<number>(0);
@@ -50,20 +50,13 @@ function BookingForm() {
     }));
   }, []);
 
-  const openModal = () => setIsModalOpen(true);
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    resetForm(); // Ensure the form resets when closing the modal
-  };
-
   const resetForm = () => {
     setCurrentBooking({
       user_id: userId,
       vehicle_id: vehicleId,
       location_id: locationId,
-      booking_date: null,
-      return_date: null,
+      booking_date: undefined, // Changed to undefined
+      return_date: undefined, // Changed to undefined
       total_amount: 0,
       booking_status: ''
     });
@@ -71,8 +64,16 @@ function BookingForm() {
 
   const handleCreateOrUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (currentBooking.return_date && currentBooking.booking_date) {
+      if (new Date(currentBooking.return_date) < new Date(currentBooking.booking_date)) {
+        toast.error('Return date cannot be earlier than booking date');
+        return;
+      }
+    }
+
     try {
-      const bookingData = {
+      const bookingData: Partial<Booking> = {
         ...currentBooking,
         user_id: userId,
         vehicle_id: vehicleId,
@@ -82,127 +83,115 @@ function BookingForm() {
 
       if (currentBooking.id) {
         await updateBooking(bookingData).unwrap();
-        toast.success('Booking updated successfully', { containerId: 'modal' });
+        toast.success('Booking updated successfully');
       } else {
         await createBooking(bookingData).unwrap();
-        toast.success('Booking created successfully', { containerId: 'modal' });
+        toast.success('Booking created successfully');
       }
       refetch();
       resetForm();
-      closeModal(); // Close modal after successful submission
     } catch (error) {
       console.error('Failed to update/create booking:', error);
-      toast.error('Failed to update/create booking', { containerId: 'modal' });
-      if (error?.data) {
-        console.error('Error data:', error.data);
+      toast.error('Failed to update/create booking');
+      if ((error as { data?: unknown })?.data) {
+        console.error('Error data:', (error as { data?: unknown }).data);
       }
     }
   };
 
   return (
-    <div>
-      <button onClick={openModal} className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg">
-        {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
-      </button>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
-            <ToastContainer
-              containerId="modal"
-              position="bottom-right"
-              autoClose={5000}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-            <h2 className="text-2xl font-bold mb-4 text-teal-600">
-              {currentBooking?.id ? 'Update Booking' : 'Create New Booking'}
-            </h2>
-            <form onSubmit={handleCreateOrUpdate}>
-              <label className="block mb-4">
-                <span className="text-gray-700">Booking Date:</span>
-                <input
-                  type="date"
-                  value={currentBooking?.booking_date || ''}
-                  onChange={(e) =>
-                    setCurrentBooking({
-                      ...currentBooking!,
-                      booking_date: e.target.value || null,
-                    })
-                  }
-                  className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              </label>
-              <label className="block mb-4">
-                <span className="text-gray-700">Return Date:</span>
-                <input
-                  type="date"
-                  value={currentBooking?.return_date || ''}
-                  onChange={(e) =>
-                    setCurrentBooking({
-                      ...currentBooking!,
-                      return_date: e.target.value || null,
-                    })
-                  }
-                  className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              </label>
-              <label className="block mb-4">
-                <span className="text-gray-700">Total Amount:</span>
-                <input
-                  type="number"
-                  value={currentBooking?.total_amount || ''}
-                  onChange={(e) =>
-                    setCurrentBooking({
-                      ...currentBooking!,
-                      total_amount: parseInt(e.target.value),
-                    })
-                  }
-                  className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              </label>
-              <label className="block mb-6">
-                <span className="text-gray-700">Booking Status:</span>
-                <input
-                  type="text"
-                  value={currentBooking?.booking_status || ''}
-                  onChange={(e) =>
-                    setCurrentBooking({
-                      ...currentBooking!,
-                      booking_status: e.target.value,
-                    })
-                  }
-                  className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  required
-                />
-              </label>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  {currentBooking?.id ? 'Update' : 'Create'}
-                </button>
-              </div>
-            </form>
-          </div>
+    <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">
+      <h2 className="text-2xl font-bold mb-4 text-teal-600">
+        {currentBooking?.id ? 'Update Booking' : 'Create New Booking'}
+      </h2>
+      <form onSubmit={handleCreateOrUpdate}>
+        <label className="block mb-4">
+          <span className="text-gray-700">Booking Date:</span>
+          <input
+            type="date"
+            value={currentBooking?.booking_date || ''}
+            onChange={(e) =>
+              setCurrentBooking({
+                ...currentBooking!,
+                booking_date: e.target.value || undefined, // Changed to undefined
+              })
+            }
+            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
+          />
+        </label>
+        <label className="block mb-4">
+          <span className="text-gray-700">Return Date:</span>
+          <input
+            type="date"
+            value={currentBooking?.return_date || ''}
+            onChange={(e) =>
+              setCurrentBooking({
+                ...currentBooking!,
+                return_date: e.target.value || undefined, // Changed to undefined
+              })
+            }
+            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
+          />
+        </label>
+        <label className="block mb-4">
+          <span className="text-gray-700">Total Amount:</span>
+          <input
+            type="number"
+            value={currentBooking?.total_amount || ''}
+            onChange={(e) =>
+              setCurrentBooking({
+                ...currentBooking!,
+                total_amount: parseInt(e.target.value),
+              })
+            }
+            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
+          />
+        </label>
+        <label className="block mb-6">
+          <span className="text-gray-700">Booking Status:</span>
+          <input
+            type="text"
+            value={currentBooking?.booking_status || ''}
+            onChange={(e) =>
+              setCurrentBooking({
+                ...currentBooking!,
+                booking_status: e.target.value,
+              })
+            }
+            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            required
+          />
+        </label>
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={resetForm}
+            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg"
+          >
+            {currentBooking?.id ? 'Update' : 'Create'}
+          </button>
         </div>
-      )}
+      </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

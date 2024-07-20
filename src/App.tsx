@@ -13,6 +13,7 @@ import  SpecsForm from './Features/cars_specifications/specForm'
 import BookingForm from './Features/Bookings/booking'
 import Vehicles from './Features/Vehicles/vehicle'
 import CreateLocationForm from './Features/locations/location'
+import Users from './Features/users/usersTable'
 
 
 
@@ -87,6 +88,12 @@ import CreateLocationForm from './Features/locations/location'
         element: <CreateLocationForm/>,
         errorElement: <Error />,
       },
+      {
+        path: 'users',
+        element: <Users/>,
+        errorElement: <Error />,
+      },
+      
       
       
       

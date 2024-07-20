@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
     id: number;
     booking_date: string ;
     return_date: string ;
-    total_amount: string ;
+    total_amount: number ;
     booking_status: string ;
 }
 
