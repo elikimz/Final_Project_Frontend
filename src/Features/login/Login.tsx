@@ -1,9 +1,6 @@
-
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginUserMutation,  } from "./login.API"; // Adjust the path accordingly
-import {  useGetUsersQuery } from "../../Features/users/usersAPI"; 
+import { useLoginUserMutation } from "./login.API"; // Adjust the path accordingly
 import { CircularProgress } from '@mui/material'; // Make sure to install @mui/material if not already
 
 const Login = () => {
@@ -11,7 +8,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // State for error message
   const [mutate, { isLoading }] = useLoginUserMutation();
-  const { data: usersData, isLoading: usersLoading, error: usersError } = useGetUsersQuery(); // Fetch all users
   const navigate = useNavigate();
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -19,23 +15,37 @@ const Login = () => {
     try {
       const result = await mutate({ email, password });
       console.log("API response:", result); // Log the entire API response
+
       if (result.error) {
         setError("Invalid email or password. Please try again."); // Set error message for incorrect credentials
       } else {
         setError("");
         const { token, user } = result.data; // Extract the token and user from the response
-        console.log("Token:", token); // Log the token
-        console.log("User object:", user); // Log the user object
 
-        // Attempt to access the user ID from different possible structures
-        const userId = user?.id || user?.user?.id || user?.data?.id || user?.data?.user?.id;
-        if (userId) {
-          localStorage.setItem("token", token); // Store the token in local storage
-          localStorage.setItem("userId", userId.toString()); // Store the userId in local storage
-          console.log("Login successful", { token, userId }); // Log the token and userId for debugging
+        if (user && user.user) {
+          const userData = user.user; // Extract the nested user object
+          console.log("Token:", token); // Log the token
+          console.log("User object:", userData); // Log the user object
+
+          // Check if all expected properties are present in userData
+          if (userData.id && userData.address && userData.contact_phone && userData.full_name) {
+            localStorage.setItem("token", token); // Store the token in local storage
+            localStorage.setItem("userId", userData.id.toString()); // Store the userId in local storage
+            localStorage.setItem("address", userData.address); // Store the address in local storage
+            localStorage.setItem("contact_phone", userData.contact_phone); // Store the contact phone in local storage
+            localStorage.setItem("email", email || ""); // Store the email in local storage (fallback to provided email)
+            localStorage.setItem("full_name", userData.full_name); // Store the full name in local storage
+
+            console.log("Login successful", { token, userId: userData.id }); // Log the token and userId for debugging
+          } else {
+            console.error("User data is incomplete or undefined in the response:", userData);
+            setError("User data is incomplete. Please contact support.");
+          }
         } else {
-          console.error("User ID is undefined in the response");
+          console.error("User object is missing or undefined:", user);
+          setError("User object is missing. Please contact support.");
         }
+
         setEmail(""); // Reset email field
         setPassword(""); // Reset password field
         setTimeout(() => {
@@ -47,15 +57,6 @@ const Login = () => {
       setError("Failed to login. Please try again.");
     }
   };
-
-  // Logging users data
-  console.log("Users data:", usersData);
-  if (usersLoading) {
-    console.log("Loading users...");
-  }
-  if (usersError) {
-    console.error("Error fetching users:", usersError);
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -127,7 +128,6 @@ const Login = () => {
                 </label>
               </div>
 
-              {/* Uncomment below to add "Forgot your password?" link */}
               <div className="text-sm">
                 <Link to="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
