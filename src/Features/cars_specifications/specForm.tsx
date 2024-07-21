@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { useGetVehicleSpecificationQuery, useCreateSpecificationMutation, useUpdateSpecificationMutation, useDeleteSpecificationMutation } from './spectAPI';
+import {
+  useGetVehicleSpecificationQuery,
+  useCreateSpecificationMutation,
+  useUpdateSpecificationMutation,
+  useDeleteSpecificationMutation,
+} from './spectAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,8 +20,8 @@ interface VehicleSpecification {
   color: string;
   features: string;
   image_url: string; // Add image_url field
-  rental_rate :number;
-  availability:boolean;
+  rental_rate: number;
+  availability: boolean;
 }
 
 function SpecsForm() {
@@ -47,33 +52,36 @@ function SpecsForm() {
     try {
       if (spec.id) {
         await updateSpecification(spec).unwrap();
-        toast.success("Specification updated successfully");
+        toast.success('Specification updated successfully');
       } else {
         await createSpecification(spec).unwrap();
-        toast.success("Specification created successfully");
+        toast.success('Specification created successfully');
       }
       refetch();
       closeModal();
     } catch (error) {
-      console.error("Failed to update/create specification:", error);
-      toast.error("Failed to update/create specification");
+      console.error('Failed to update/create specification:', error);
+      toast.error('Failed to update/create specification');
     }
   };
 
   const handleDelete = async (id: number) => {
     try {
       await deleteSpecification(id).unwrap();
-      toast.success("Specification deleted successfully");
+      toast.success('Specification deleted successfully');
       refetch();
     } catch (error) {
-      console.error("Failed to delete specification:", error);
-      toast.error("Failed to delete specification");
+      console.error('Failed to delete specification:', error);
+      toast.error('Failed to delete specification');
     }
   };
 
   return (
     <div className="overflow-x-auto">
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" onClick={openModalForCreate}>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onClick={openModalForCreate}
+      >
         Create New Specification
       </button>
       <ToastContainer />
@@ -82,41 +90,69 @@ function SpecsForm() {
       ) : isError ? (
         <p>Error loading data.</p>
       ) : (
-        vehicleSpecifications &&
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {vehicleSpecifications.map((spec) => (
-            <div key={spec.id} className="rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-              <div className="bg-gradient-to-br from-purple-400 to-indigo-500 p-4">
-                <h3 className="text-lg font-bold text-white">{spec.manufacturer} {spec.model}</h3>
-                <div className="flex justify-between mt-2">
-                  <p className="text-sm text-white">{spec.year}</p>
-                  <div>
-                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2" onClick={() => openModalForUpdate(spec)}>
-                      Update
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={() => handleDelete(spec.id)}>
-                      Delete
-                    </button>
+        vehicleSpecifications && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {vehicleSpecifications.map((spec) => (
+              <div key={spec.id} className="rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+                <div className="bg-gradient-to-br from-purple-400 to-indigo-500 p-4">
+                  <h3 className="text-lg font-bold text-white">
+                    {spec.manufacturer} {spec.model}
+                  </h3>
+                  <p className="text-sm text-white">ID: {spec.id}</p> {/* Display Vehicle ID in purple region */}
+                  <div className="flex justify-between mt-2">
+                    <p className="text-sm text-white">{spec.year}</p>
+                    <div>
+                      <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
+                        onClick={() => openModalForUpdate(spec)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                        onClick={() => handleDelete(spec.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
+                <div className="p-4 bg-white">
+                  <img
+                    src={spec.image_url}
+                    alt={`${spec.manufacturer} ${spec.model}`}
+                    className="w-full h-40 object-cover mb-4"
+                  />
+                  <p>
+                    <strong>Fuel Type:</strong> {spec.fuel_type}
+                  </p>
+                  <p>
+                    <strong>Engine Capacity:</strong> {spec.engine_capacity}
+                  </p>
+                  <p>
+                    <strong>Transmission:</strong> {spec.transmission}
+                  </p>
+                  <p>
+                    <strong>Seating Capacity:</strong> {spec.seating_capacity}
+                  </p>
+                  <p>
+                    <strong>Color:</strong> {spec.color}
+                  </p>
+                  <p>
+                    <strong>Features:</strong> {spec.features}
+                  </p>
+                </div>
               </div>
-              <div className="p-4 bg-white">
-                <img src={spec.image_url} alt={`${spec.manufacturer} ${spec.model}`} className="w-full h-40 object-cover mb-4" />
-                <p><strong>Fuel Type:</strong> {spec.fuel_type}</p>
-                <p><strong>Engine Capacity:</strong> {spec.engine_capacity}</p>
-                <p><strong>Transmission:</strong> {spec.transmission}</p>
-                <p><strong>Seating Capacity:</strong> {spec.seating_capacity}</p>
-                <p><strong>Color:</strong> {spec.color}</p>
-                <p><strong>Features:</strong> {spec.features}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )
       )}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-4 w-full max-w-lg">
-            <h2 className="text-xl font-bold mb-2">{currentSpec ? 'Update Vehicle Specification' : 'Create New Vehicle Specification'}</h2>
+            <h2 className="text-xl font-bold mb-2">
+              {currentSpec ? 'Update Vehicle Specification' : 'Create New Vehicle Specification'}
+            </h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -130,7 +166,9 @@ function SpecsForm() {
                   <input
                     type="text"
                     value={currentSpec?.manufacturer || ''}
-                    onChange={(e) => setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })}
+                    onChange={(e) =>
+                      setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })
+                    }
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -178,7 +216,9 @@ function SpecsForm() {
                   <input
                     type="text"
                     value={currentSpec?.engine_capacity || ''}
-                    onChange={(e) => setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })}
+                    onChange={(e) =>
+                      setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })
+                    }
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -190,7 +230,9 @@ function SpecsForm() {
                   <input
                     type="text"
                     value={currentSpec?.transmission || ''}
-                    onChange={(e) => setCurrentSpec({ ...currentSpec!, transmission: e.target.value })}
+                    onChange={(e) =>
+                      setCurrentSpec({ ...currentSpec!, transmission: e.target.value })
+                    }
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -202,7 +244,9 @@ function SpecsForm() {
                   <input
                     type="number"
                     value={currentSpec?.seating_capacity || ''}
-                    onChange={(e) => setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })}
+                    onChange={(e) =>
+                      setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })
+                    }
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -220,11 +264,10 @@ function SpecsForm() {
                   />
                 </label>
               </div>
-              <div className="w-full md:w-1/2 px-2">
+              <div className="w-full px-2">
                 <label className="block mb-2">
                   Features:
-                  <input
-                    type="text"
+                  <textarea
                     value={currentSpec?.features || ''}
                     onChange={(e) => setCurrentSpec({ ...currentSpec!, features: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
@@ -232,7 +275,7 @@ function SpecsForm() {
                   />
                 </label>
               </div>
-              <div className="w-full md:w-1/2 px-2">
+              <div className="w-full px-2">
                 <label className="block mb-2">
                   Image URL:
                   <input
@@ -240,20 +283,21 @@ function SpecsForm() {
                     value={currentSpec?.image_url || ''}
                     onChange={(e) => setCurrentSpec({ ...currentSpec!, image_url: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
+                    required
                   />
                 </label>
               </div>
-              <div className="w-full flex justify-end mt-4">
+              <div className="w-full px-2 mt-4 flex justify-end">
                 <button
                   type="button"
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
                   onClick={closeModal}
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded mr-2"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   {currentSpec ? 'Update' : 'Create'}
                 </button>

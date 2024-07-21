@@ -14,6 +14,8 @@ import BookingForm from './Features/Bookings/booking'
 import Vehicles from './Features/Vehicles/vehicle'
 import CreateLocationForm from './Features/locations/location'
 import Users from './Features/users/usersTable'
+import AdminDashboard from './Features/AdminDashboard/AdminDashboard'
+import VehiclesAdmin from './Features/Vehicles/VehiclesAdmin'
 
 
 
@@ -93,11 +95,23 @@ import Users from './Features/users/usersTable'
         element: <Users/>,
         errorElement: <Error />,
       },
+      {
+        path: 'AdminDashboard',
+        element: <AdminDashboard/>,
+        errorElement: <Error />,
+      },
+      {
+        path: 'VehiclesAdmin',
+        element: <VehiclesAdmin/>,
+        errorElement: <Error />,
+      },
       
       
       
       
+    
       
+     
 
 
    

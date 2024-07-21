@@ -39,7 +39,10 @@ const Navbar = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="User Avatar"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0" />
+                {/* src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0" alt="Beautiful Landscape" /> */}
+
             </div>
           </div>
           <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
@@ -47,7 +50,7 @@ const Navbar = () => {
               <Link to="/Users" className="text-black hover:text-gray-300">Dashboard</Link>
             </li>
             <li>
-              <Link to="/profilemanagement" className="text-black hover:text-gray-300">Profile</Link>
+              <Link to="/AdminDashboard" className="text-black hover:text-gray-300">Profile</Link>
             </li>
            
             <li>

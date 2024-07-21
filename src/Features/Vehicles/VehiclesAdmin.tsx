@@ -25,7 +25,7 @@ interface Vehicle {
     vehicleSpecifications: VehicleSpecifications | null; // Allow vehicleSpecifications to be null
 }
 
-const Vehicles: React.FC = () => {
+const VehiclesAdmin: React.FC = () => {
     const { data: vehicles, isLoading, isError } = useGetVehiclesQuery();
 
     const handleBookNow = (vehicleId: number) => {
@@ -42,7 +42,7 @@ const Vehicles: React.FC = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="p-6 bg-gray-100 min-h-screen">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {vehicles && vehicles.map((vehicle: Vehicles) => (
@@ -69,15 +69,6 @@ const Vehicles: React.FC = () => {
                                                 <span className="text-gray-800">Availability:</span> {vehicle.availability ? 'Available' : 'Unavailable'}
                                             </p>
                                         </div>
-                                        <div className="space-y-2 text-gray-700">
-                                            <p><strong>Year:</strong> {vehicle.vehicleSpecifications.year}</p>
-                                            <p><strong>Fuel Type:</strong> {vehicle.vehicleSpecifications.fuel_type}</p>
-                                            <p><strong>Engine Capacity:</strong> {vehicle.vehicleSpecifications.engine_capacity}</p>
-                                            <p><strong>Transmission:</strong> {vehicle.vehicleSpecifications.transmission}</p>
-                                            <p><strong>Seating Capacity:</strong> {vehicle.vehicleSpecifications.seating_capacity}</p>
-                                            <p><strong>Color:</strong> {vehicle.vehicleSpecifications.color}</p>
-                                            <p><strong>Features:</strong> {vehicle.vehicleSpecifications.features}</p>
-                                        </div>
                                     </div>
                                 </>
                             )}
@@ -89,4 +80,4 @@ const Vehicles: React.FC = () => {
     );
 };
 
-export default Vehicles;
+export default VehiclesAdmin;
