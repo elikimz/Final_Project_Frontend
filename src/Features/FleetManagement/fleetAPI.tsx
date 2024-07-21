@@ -31,7 +31,7 @@ export const FleetManagementAPI = createApi({
     }),
     deleteFleetItem: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
-        url: `FleetManagement${id}`,
+        url: `FleetManagement/${id}`,
         method: 'DELETE',
         providesTags: ['FleetManagement'],
       }),
@@ -39,7 +39,7 @@ export const FleetManagementAPI = createApi({
     }),
     updateFleetItem: builder.mutation<FleetManagement, Partial<FleetManagement> & { id: number }>({
       query: ({ id, ...rest }) => ({
-        url: `FleetManagement${id}`,
+        url: `FleetManagement/${id}`,
         method: 'PUT',
         body: rest,
         providesTags: ['FleetManagement'],

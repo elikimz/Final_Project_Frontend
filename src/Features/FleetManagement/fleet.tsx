@@ -18,6 +18,7 @@ const FleetManagementPage: React.FC = () => {
     maintenance_cost: '',
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentId, setCurrentId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const FleetManagementPage: React.FC = () => {
       console.log('Form data reset after submission');
       setIsEditing(false);
       setCurrentId(null);
+      setIsFormVisible(false);
     } catch (err) {
       console.error('Error handling fleet item:', err);
       toast.error('Failed to handle fleet item.');
@@ -93,6 +95,7 @@ const FleetManagementPage: React.FC = () => {
     });
     setIsEditing(true);
     setCurrentId(item.id);
+    setIsFormVisible(true);
   };
 
   const handleDeleteFleetItem = async (id: number) => {
@@ -117,79 +120,89 @@ const FleetManagementPage: React.FC = () => {
       {isLoading && <p className="text-blue-700">Loading fleet items...</p>}
       {isError && <p className="text-red-700">Failed to load fleet items.</p>}
 
+      <button
+        onClick={() => setIsFormVisible(true)}
+        className="bg-green-500 text-white py-2 px-4 rounded mb-4"
+      >
+        Create New Fleet Item
+      </button>
+
       {/* Form */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold mb-4">{isEditing ? 'Update Fleet Item' : 'Create New Fleet Item'}</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Vehicle ID</label>
-            <input
-              type="text"
-              name="vehicleId"
-              value={formData.vehicleId}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Status</label>
-            <input
-              type="text"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Acquisition Date</label>
-            <input
-              type="date"
-              name="acquisition_date"
-              value={formData.acquisition_date}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Depreciation Rate</label>
-            <input
-              type="text"
-              name="depreciation_rate"
-              value={formData.depreciation_rate}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Current Value</label>
-            <input
-              type="text"
-              name="current_value"
-              value={formData.current_value}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Maintenance Cost</label>
-            <input
-              type="text"
-              name="maintenance_cost"
-              value={formData.maintenance_cost}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-            disabled={isCreating || isUpdating}
-          >
-            {isEditing ? (isUpdating ? 'Updating...' : 'Update Fleet Item') : (isCreating ? 'Creating...' : 'Create Fleet Item')}
-          </button>
-        </form>
-      </div>
+      {isFormVisible && (
+        <div className="mb-6">
+          <h2 className="text-xl font-bold mb-4">{isEditing ? 'Update Fleet Item' : 'Create New Fleet Item'}</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Vehicle ID</label>
+              <input
+                type="text"
+                name="vehicleId"
+                value={formData.vehicleId}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                disabled
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Status</label>
+              <input
+                type="text"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Acquisition Date</label>
+              <input
+                type="date"
+                name="acquisition_date"
+                value={formData.acquisition_date}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Depreciation Rate</label>
+              <input
+                type="text"
+                name="depreciation_rate"
+                value={formData.depreciation_rate}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Current Value</label>
+              <input
+                type="text"
+                name="current_value"
+                value={formData.current_value}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Maintenance Cost</label>
+              <input
+                type="text"
+                name="maintenance_cost"
+                value={formData.maintenance_cost}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+              disabled={isCreating || isUpdating}
+            >
+              {isEditing ? (isUpdating ? 'Updating...' : 'Update Fleet Item') : (isCreating ? 'Creating...' : 'Create Fleet Item')}
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Fleet Items Table */}
       {!isLoading && !isError && fleetItems && (
@@ -210,27 +223,28 @@ const FleetManagementPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {fleetItems.map((item) => (
+              {fleetItems.map((item: any) => (
                 <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.vehicle_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.created_at?.toString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.updated_at?.toString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.acquisition_date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.depreciation_rate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.current_value}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.maintenance_cost}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap">{item.vehicle_id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.created_at}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.updated_at}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.status}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.acquisition_date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.depreciation_rate}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.current_value}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.maintenance_cost}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => handleEditClick(item)}
-                      className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
+                      className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteFleetItem(item.id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded"
+                      className="bg-red-500 text-white py-1 px-2 rounded"
+                      disabled={isDeleting}
                     >
                       Delete
                     </button>
