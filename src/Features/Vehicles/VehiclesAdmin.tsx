@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useGetVehiclesQuery } from './vehicleAPI';
+import { useGetVehiclesQuery, useCreateVehiclesMutation, useUpdateVehiclesMutation, useDeleteVehiclesMutation } from './vehicleAPI';
 import Navbar from "../../components/navbar";
 
 interface VehicleSpecifications {
@@ -26,10 +26,60 @@ interface Vehicle {
 }
 
 const VehiclesAdmin: React.FC = () => {
-    const { data: vehicles, isLoading, isError } = useGetVehiclesQuery();
+    const { data: vehicles, isLoading, isError, refetch } = useGetVehiclesQuery();
+    const [createVehicle] = useCreateVehiclesMutation();
+    const [updateVehicle] = useUpdateVehiclesMutation();
+    const [deleteVehicle] = useDeleteVehiclesMutation();
+    const [vehicleSpecId, setVehicleSpecId] = useState('');
+    const [rentalRate, setRentalRate] = useState('');
+    const [availability, setAvailability] = useState(false);
+    const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+    const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
-    const handleBookNow = (vehicleId: number) => {
-        localStorage.setItem("vehicleId", vehicleId.toString());
+    const handleCreateOrUpdateVehicle = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const vehicleData = {
+            vehicleSpec_id: Number(vehicleSpecId),
+            rental_rate: rentalRate,
+            availability: availability,
+        };
+
+        if (editingVehicle) {
+            await updateVehicle({ id: editingVehicle.id, ...vehicleData });
+            setPopupMessage('Vehicle updated successfully!');
+            setEditingVehicle(null);
+        } else {
+            await createVehicle(vehicleData);
+            setPopupMessage('Vehicle created successfully!');
+        }
+
+        // Refetch vehicles data
+        refetch();
+
+        // Reset form fields
+        setVehicleSpecId('');
+        setRentalRate('');
+        setAvailability(false);
+
+        // Hide popup message after 3 seconds
+        setTimeout(() => setPopupMessage(null), 3000);
+    };
+
+    const handleEdit = (vehicle: Vehicle) => {
+        setEditingVehicle(vehicle);
+        setVehicleSpecId(vehicle.vehicleSpec_id.toString());
+        setRentalRate(vehicle.rental_rate);
+        setAvailability(vehicle.availability);
+    };
+
+    const handleDelete = async (id: number) => {
+        await deleteVehicle(id);
+        setPopupMessage('Vehicle deleted successfully!');
+        // Refetch vehicles data
+        refetch();
+        // Hide popup message after 3 seconds
+        setTimeout(() => setPopupMessage(null), 3000);
     };
 
     if (isLoading) {
@@ -44,6 +94,51 @@ const VehiclesAdmin: React.FC = () => {
         <>
             {/* <Navbar /> */}
             <div className="p-6 bg-gray-100 min-h-screen">
+                {popupMessage && (
+                    <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                        {popupMessage}
+                    </div>
+                )}
+                <form onSubmit={handleCreateOrUpdateVehicle} className="mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label className="block text-gray-700">Vehicle Spec ID:</label>
+                            <input
+                                type="number"
+                                value={vehicleSpecId}
+                                onChange={(e) => setVehicleSpecId(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">Rental Rate:</label>
+                            <input
+                                type="text"
+                                value={rentalRate}
+                                onChange={(e) => setRentalRate(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">Availability:</label>
+                            <select
+                                value={availability ? 'true' : 'false'}
+                                onChange={(e) => setAvailability(e.target.value === 'true')}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                required
+                            >
+                                <option value="true">Available</option>
+                                <option value="false">Unavailable</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" className="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600">
+                        {editingVehicle ? 'Update Vehicle' : 'Add Vehicle'}
+                    </button>
+                </form>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {vehicles && vehicles.map((vehicle: Vehicles) => (
                         <div key={vehicle.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
@@ -53,13 +148,6 @@ const VehiclesAdmin: React.FC = () => {
                                     <div className="p-4">
                                         <div className="flex justify-between items-center mb-4">
                                             <h3 className="text-xl font-semibold text-teal-600">{vehicle.vehicleSpecifications.manufacturer} {vehicle.vehicleSpecifications.model}</h3>
-                                            <Link
-                                                to="/CreateLocationForm"
-                                                className="bg-teal-500 text-white px-4 py-2 rounded-md inline-block font-bold hover:bg-teal-600"
-                                                onClick={() => handleBookNow(vehicle.id)}
-                                            >
-                                                Book Now
-                                            </Link>
                                         </div>
                                         <div className="mb-4">
                                             <p className="text-lg font-semibold text-green-600">
@@ -69,6 +157,12 @@ const VehiclesAdmin: React.FC = () => {
                                                 <span className="text-gray-800">Availability:</span> {vehicle.availability ? 'Available' : 'Unavailable'}
                                             </p>
                                         </div>
+                                        <button onClick={() => handleEdit(vehicle)} className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600">
+                                            Edit
+                                        </button>
+                                        <button onClick={() => handleDelete(vehicle.id)} className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                                            Delete
+                                        </button>
                                     </div>
                                 </>
                             )}

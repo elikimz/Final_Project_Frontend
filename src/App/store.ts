@@ -12,7 +12,7 @@ import {LocationAPI} from "../Features/locations/locationAPI"
 
 
 const persistConfig = {
-    key: 'root',
+    key: "root",
     storage,
 };
 
