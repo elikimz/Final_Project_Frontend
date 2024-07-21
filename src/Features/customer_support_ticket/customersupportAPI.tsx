@@ -37,7 +37,7 @@ export const CustomerSupportTicketsAPI = createApi({
         }),
         updateTicket: builder.mutation<CustomerSupportTickets, Partial<CustomerSupportTickets>>({
             query: ({ id, ...rest }) => ({
-                url: `<CustomerSupportTickets/${id}`,
+                url: `CustomerSupportTickets/${id}`,
                 method: 'PUT',
                 body: rest,
                 // providesTags: ['updateTicketTags'],

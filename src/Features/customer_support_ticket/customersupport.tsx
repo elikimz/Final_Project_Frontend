@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useGetCustomerSupportTicketQuery, useCreateTicketMutation, useDeleteTicketMutation, useUpdateTicketMutation } from './customersupportAPI';
 import { CustomerSupportTickets } from '../../Features/customer_support_ticket/customersupportAPI'; // Adjust the path to where your type is defined
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import styles for Toastify
 
 const CustomerSupportTicketsPage: React.FC = () => {
-  const { data: tickets, isLoading, isError } = useGetCustomerSupportTicketQuery();
+  const { data: tickets, isLoading, isError, refetch } = useGetCustomerSupportTicketQuery();
   const [createTicket, { isLoading: isCreating }] = useCreateTicketMutation();
   const [updateTicket, { isLoading: isUpdating }] = useUpdateTicketMutation();
   const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
   
-  // State for managing new ticket and selected ticket
   const [newTicket, setNewTicket] = useState<Partial<CustomerSupportTickets>>({
     subject: '',
     description: '',
@@ -16,7 +17,6 @@ const CustomerSupportTicketsPage: React.FC = () => {
   });
   const [selectedTicket, setSelectedTicket] = useState<Partial<CustomerSupportTickets> | null>(null);
 
-  // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewTicket((prev: any) => ({ ...prev, [name]: value }));
@@ -29,9 +29,8 @@ const CustomerSupportTicketsPage: React.FC = () => {
     }
   };
 
-  // Handle form submissions
   const handleCreateTicket = async () => {
-    const userId = localStorage.getItem('userId'); // Retrieve user ID from local storage
+    const userId = localStorage.getItem('userId');
     if (!userId) {
       console.error('User ID not found in local storage');
       return;
@@ -39,15 +38,17 @@ const CustomerSupportTicketsPage: React.FC = () => {
 
     const ticketData: Partial<CustomerSupportTickets> = {
       ...newTicket,
-      user_id: Number(userId), // Include user ID in ticket data
+      user_id: Number(userId),
     };
 
     try {
       await createTicket(ticketData).unwrap();
-      // Optionally refetch tickets or handle success
-      setNewTicket({ subject: '', description: '', status: '' }); // Clear form
+      await refetch();
+      setNewTicket({ subject: '', description: '', status: '' });
+      toast.success('Ticket created successfully!');
     } catch (err) {
       console.error('Error creating ticket:', err);
+      toast.error('Failed to create ticket.');
     }
   };
 
@@ -55,10 +56,12 @@ const CustomerSupportTicketsPage: React.FC = () => {
     if (selectedTicket && selectedTicket.id) {
       try {
         await updateTicket(selectedTicket).unwrap();
-        // Optionally refetch tickets or handle success
-        setSelectedTicket(null); // Clear selected ticket
+        await refetch();
+        setSelectedTicket(null);
+        toast.success('Ticket updated successfully!');
       } catch (err) {
         console.error('Error updating ticket:', err);
+        toast.error('Failed to update ticket.');
       }
     }
   };
@@ -66,15 +69,19 @@ const CustomerSupportTicketsPage: React.FC = () => {
   const handleDeleteTicket = async (id: number) => {
     try {
       await deleteTicket(id).unwrap();
-      // Optionally refetch tickets or handle success
+      await refetch();
+      toast.success('Ticket deleted successfully!');
     } catch (err) {
       console.error('Error deleting ticket:', err);
+      toast.error('Failed to delete ticket.');
     }
   };
 
   return (
     <div className="min-h-screen p-4">
       <h1 className="text-2xl font-bold mb-6">Customer Support Tickets</h1>
+
+      <ToastContainer />
 
       {/* Loading and Error Handling */}
       {isLoading && <p className="text-blue-700">Loading tickets...</p>}
