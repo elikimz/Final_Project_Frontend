@@ -16,6 +16,9 @@ import CreateLocationForm from './Features/locations/location'
 import Users from './Features/users/usersTable'
 import AdminDashboard from './Features/AdminDashboard/AdminDashboard'
 import VehiclesAdmin from './Features/Vehicles/VehiclesAdmin'
+import ManageUsers from './Features/users/ManageUsers'
+import CustomerSupportTicketsPage from './Features/customer_support_ticket/customersupport'
+
 
 
 
@@ -105,6 +108,19 @@ import VehiclesAdmin from './Features/Vehicles/VehiclesAdmin'
         element: <VehiclesAdmin/>,
         errorElement: <Error />,
       },
+      {
+        path: 'ManageUsers',
+        element: < ManageUsers/>,
+        errorElement: <Error />,
+      },
+      {
+        path: 'CustomerSupportTicketsPage',
+        element: <CustomerSupportTicketsPage/>,
+        errorElement: <Error />,
+      }
+      
+      
+      
       
       
       

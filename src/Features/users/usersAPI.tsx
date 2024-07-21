@@ -8,9 +8,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
     name: string | null;
     contact_phone: string | null;
     address: string | null;
-    created_at: Date | null;
-    updated_at: Date | null;
-}
+ }
 
 export const UserAPI = createApi({
     reducerPath: 'usersAPI',

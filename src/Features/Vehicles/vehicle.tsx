@@ -28,6 +28,11 @@ interface Vehicle {
 const Vehicles: React.FC = () => {
     const { data: vehicles, isLoading, isError } = useGetVehiclesQuery();
 
+    const formatCurrency = (value: string) => {
+        const numberValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(numberValue);
+    };
+
     const handleBookNow = (vehicleId: number) => {
         localStorage.setItem("vehicleId", vehicleId.toString());
     };
@@ -63,7 +68,7 @@ const Vehicles: React.FC = () => {
                                         </div>
                                         <div className="mb-4">
                                             <p className="text-lg font-semibold text-green-600">
-                                                <span className="text-gray-800">Rental Rate:</span> {vehicle.rental_rate}
+                                                <span className="text-gray-800">Rental Rate:</span> {formatCurrency(vehicle.rental_rate)}
                                             </p>
                                             <p className={`text-lg font-semibold ${vehicle.availability ? 'text-green-600' : 'text-red-600'}`}>
                                                 <span className="text-gray-800">Availability:</span> {vehicle.availability ? 'Available' : 'Unavailable'}

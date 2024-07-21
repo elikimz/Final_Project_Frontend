@@ -6,7 +6,7 @@ import { useLogoutMutation } from '../login/login.API';
 
 Modal.setAppElement('#root');
 
-function Users() {
+function ManageUsers() {
   const navigate = useNavigate();
   const { data: userData, isLoading, isError, refetch } = useGetUsersQuery();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
@@ -80,80 +80,10 @@ function Users() {
     navigate('/login'); // Navigate to the login page after logging out
   };
 
-  const handleNavigateToCurrentBookings = () => {
-    navigate('/profilemanagement'); // Navigate to the current bookings page
-  };
-
-  const handleNavigateToBookingHistory = () => {
-    navigate('/profilemanagement'); // Navigate to the booking history page
-  };
-
-  const handleNavigateToAccountSettings = () => {
-    navigate('/profilemanagement'); // Navigate to the account settings page
-  };
-
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar Navigation */}
-      <aside className="w-1/4 bg-green-900 shadow-md text-white p-4">
-        <div className="text-2xl font-bold mb-8">Dashboard</div>
-        <nav>
-          <ul className="space-y-4">
-            <li>
-              <button
-                onClick={handleNavigateToCurrentBookings}
-                className="text-white hover:text-gray-400"
-              >
-                Current Bookings
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={handleNavigateToBookingHistory}
-                className="text-white hover:text-gray-400"
-              >
-                Booking History
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={handleNavigateToAccountSettings}
-                className="text-white hover:text-gray-400"
-              >
-                Account Settings
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={handleLogout}
-                className="text-white hover:text-gray-400"
-                disabled={isLoggingOut}
-              >
-                {isLoggingOut ? 'Logging out...' : 'Logout'}
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
       {/* Main Content */}
-      <div className="w-3/4 p-4">
-        {/* Overview Section */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-green-100 shadow-md rounded-lg p-4">
-            <h3 className="text-lg font-bold">Current Bookings</h3>
-            <p>Summary of current bookings...</p>
-          </div>
-          <div className="bg-blue-100 shadow-md rounded-lg p-4">
-            <h3 className="text-lg font-bold">Booking History</h3>
-            <p>Summary of past bookings...</p>
-          </div>
-          <div className="bg-purple-100 shadow-md rounded-lg p-4">
-            <h3 className="text-lg font-bold">Account Settings</h3>
-            <p>Summary of account settings...</p>
-          </div>
-        </div>
-
+      <div className="w-full p-4">
         {/* Users Table */}
         <div className="overflow-x-auto shadow-lg rounded-lg mb-8">
           <table className="min-w-full divide-y divide-blue-200">
@@ -172,7 +102,7 @@ function Users() {
               {isLoading ? (
                 <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">Loading...</td></tr>
               ) : isError ? (
-                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-red-700"></td></tr>
+                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-red-700">Error loading users.</td></tr>
               ) : (
                 userData?.map((user, index) => (
                   <tr key={user.id} className={`bg-${index % 2 === 0 ? 'white' : 'blue-100'} hover:bg-yellow-100`}>
@@ -273,11 +203,11 @@ function Users() {
                   id="address"
                 />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex justify-end">
                 <button
                   type="button"
                   onClick={handleUpdate}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
                   disabled={isUpdating}
                 >
                   {isUpdating ? 'Updating...' : 'Update'}
@@ -285,17 +215,28 @@ function Users() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                  className="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-700"
                 >
-                  Cancel
+                  Close
                 </button>
               </div>
             </form>
           </div>
         </Modal>
+
+        {/* Logout Button */}
+        <div className="mt-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+            disabled={isLoggingOut}
+          >
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Users;
+export default ManageUsers;

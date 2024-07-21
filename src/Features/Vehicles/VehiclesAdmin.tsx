@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useGetVehiclesQuery, useCreateVehiclesMutation, useUpdateVehiclesMutation, useDeleteVehiclesMutation } from './vehicleAPI';
-import Navbar from "../../components/navbar";
 
 interface VehicleSpecifications {
     id: number;
@@ -36,12 +34,17 @@ const VehiclesAdmin: React.FC = () => {
     const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
     const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
+    const formatCurrency = (value: string) => {
+        const numberValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(numberValue);
+    };
+
     const handleCreateOrUpdateVehicle = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const vehicleData = {
             vehicleSpec_id: Number(vehicleSpecId),
-            rental_rate: rentalRate,
+            rental_rate: rentalRate.replace(/[^0-9.-]+/g, ''), // Remove any non-numeric characters
             availability: availability,
         };
 
@@ -151,7 +154,7 @@ const VehiclesAdmin: React.FC = () => {
                                         </div>
                                         <div className="mb-4">
                                             <p className="text-lg font-semibold text-green-600">
-                                                <span className="text-gray-800">Rental Rate:</span> {vehicle.rental_rate}
+                                                <span className="text-gray-800">Rental Rate:</span> {formatCurrency(vehicle.rental_rate)}
                                             </p>
                                             <p className={`text-lg font-semibold ${vehicle.availability ? 'text-green-600' : 'text-red-600'}`}>
                                                 <span className="text-gray-800">Availability:</span> {vehicle.availability ? 'Available' : 'Unavailable'}

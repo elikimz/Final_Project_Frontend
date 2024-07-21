@@ -39,7 +39,7 @@ const Sidebar = () => {
           </li>
           <li>
             <button
-              onClick={() => handleNavigation('/manage-users')}
+              onClick={() => handleNavigation('/ManageUsers')}
               className="block p-4 hover:bg-gray-700 w-full text-left"
             >
               Manage Users
@@ -63,7 +63,7 @@ const Sidebar = () => {
           </li>
           <li>
             <button
-              onClick={() => handleNavigation('/support-tickets')}
+              onClick={() => handleNavigation('/CustomerSupportTicketsPage')}
               className="block p-4 hover:bg-gray-700 w-full text-left"
             >
               Customer Support Tickets
