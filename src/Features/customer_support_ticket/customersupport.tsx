@@ -53,16 +53,25 @@ const CustomerSupportTicketsPage: React.FC = () => {
   };
 
   const handleUpdateTicket = async () => {
-    if (selectedTicket && selectedTicket.id) {
-      try {
-        await updateTicket(selectedTicket).unwrap();
-        await refetch();
-        setSelectedTicket(null);
-        toast.success('Ticket updated successfully!');
-      } catch (err) {
-        console.error('Error updating ticket:', err);
-        toast.error('Failed to update ticket.');
-      }
+    const userId = localStorage.getItem('userId');
+    if (!userId || !selectedTicket?.id) {
+      console.error('User ID or ticket ID not found');
+      return;
+    }
+
+    const updatedTicketData: Partial<CustomerSupportTickets> = {
+      ...selectedTicket,
+      user_id: Number(userId), // Ensure user_id is included and converted to number
+    };
+
+    try {
+      await updateTicket(updatedTicketData).unwrap();
+      await refetch();
+      setSelectedTicket(null);
+      toast.success('Ticket updated successfully!');
+    } catch (err) {
+      console.error('Error updating ticket:', err);
+      toast.error('Failed to update ticket.');
     }
   };
 
@@ -139,7 +148,7 @@ const CustomerSupportTicketsPage: React.FC = () => {
             placeholder="Description"
             value={selectedTicket.description || ''}
             onChange={handleSelectedTicketChange}
-            className="border rounded p-2 mb-2 w-full"
+            className="border rounded p-2 mb-2 w-full description-field"
           />
           <input
             type="text"
@@ -147,7 +156,7 @@ const CustomerSupportTicketsPage: React.FC = () => {
             placeholder="Status"
             value={selectedTicket.status || ''}
             onChange={handleSelectedTicketChange}
-            className="border rounded p-2 mb-2 w-full"
+            className="border rounded p-2 mb-2 w-full status-field"
           />
           <button
             onClick={handleUpdateTicket}
@@ -183,8 +192,8 @@ const CustomerSupportTicketsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.updated_at?.toString() || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.user_id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.subject || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.description || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.status || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 description-field">{ticket.description || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 status-field">{ticket.status || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <button
                       onClick={() => setSelectedTicket(ticket)}

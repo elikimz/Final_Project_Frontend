@@ -6,7 +6,7 @@ function Users() {
   const navigate = useNavigate();
 
   const handleNavigateToCurrentBookings = () => {
-    navigate('/profilemanagement'); // Navigate to the current bookings page
+    navigate('/CustomerSupportTicketsPage'); // Navigate to the current bookings page
   };
 
   const handleNavigateToBookingHistory = () => {
@@ -31,7 +31,7 @@ function Users() {
                   onClick={handleNavigateToCurrentBookings}
                   className="text-white hover:text-gray-400"
                 >
-                  Current Bookings
+                Create Ticket
                 </button>
               </li>
               <li>

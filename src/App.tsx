@@ -18,6 +18,7 @@ import AdminDashboard from './Features/AdminDashboard/AdminDashboard'
 import VehiclesAdmin from './Features/Vehicles/VehiclesAdmin'
 import ManageUsers from './Features/users/ManageUsers'
 import CustomerSupportTicketsPage from './Features/customer_support_ticket/customersupport'
+import  FleetManagementPage from './Features/FleetManagement/fleet'
 
 
 
@@ -117,6 +118,11 @@ import CustomerSupportTicketsPage from './Features/customer_support_ticket/custo
         path: 'CustomerSupportTicketsPage',
         element: <CustomerSupportTicketsPage/>,
         errorElement: <Error />,
+      },
+      {
+        path: 'FleetManagementPage',
+        element: <FleetManagementPage/>,
+        errorElement: <Error />,
       }
       
       
@@ -125,7 +131,8 @@ import CustomerSupportTicketsPage from './Features/customer_support_ticket/custo
       
       
       
-    
+      
+      
       
      
 
