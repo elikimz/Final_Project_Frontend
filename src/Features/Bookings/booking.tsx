@@ -81,13 +81,34 @@ function BookingForm() {
         total_amount: parseInt(currentBooking.total_amount.toString())
       };
 
+      console.log('Booking Data to Send:', bookingData);
+
       if (currentBooking.id) {
-        await updateBooking(bookingData).unwrap();
+        // Update existing booking
+        const updatedBooking = await updateBooking(bookingData).unwrap();
+        console.log('Updated Booking Response:', updatedBooking);
         toast.success('Booking updated successfully');
+        
+        // Persist booking ID to local storage
+        if (updatedBooking.id) {
+          localStorage.setItem('bookingId', updatedBooking.id.toString());
+        } else {
+          console.warn('No booking ID returned from update response');
+        }
       } else {
-        await createBooking(bookingData).unwrap();
+        // Create new booking
+        const newBooking = await createBooking(bookingData).unwrap();
+        console.log('New Booking Response:', newBooking);
         toast.success('Booking created successfully');
+        
+        // Persist booking ID to local storage
+        if (newBooking.id) {
+          localStorage.setItem('bookingId', newBooking.id.toString());
+        } else {
+          console.warn('No booking ID returned from create response');
+        }
       }
+      
       refetch();
       resetForm();
     } catch (error) {

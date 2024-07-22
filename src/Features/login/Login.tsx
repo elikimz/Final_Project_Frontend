@@ -35,8 +35,16 @@ const Login = () => {
             localStorage.setItem("contact_phone", userData.contact_phone); // Store the contact phone in local storage
             localStorage.setItem("email", email || ""); // Store the email in local storage (fallback to provided email)
             localStorage.setItem("full_name", userData.full_name); // Store the full name in local storage
+            localStorage.setItem("role", user.role); // Store the role in local storage
 
             console.log("Login successful", { token, userId: userData.id }); // Log the token and userId for debugging
+
+            // Redirect based on user role
+            if (user.role === "admin") {
+              navigate("/AdminDashboard");
+            } else {
+              navigate("/Vehicles");
+            }
           } else {
             console.error("User data is incomplete or undefined in the response:", userData);
             setError("User data is incomplete. Please contact support.");
@@ -48,9 +56,6 @@ const Login = () => {
 
         setEmail(""); // Reset email field
         setPassword(""); // Reset password field
-        setTimeout(() => {
-          navigate("/Vehicles"); // Redirect to the desired page
-        }, 400); // Optional delay before redirecting
       }
     } catch (err) {
       console.error("Login failed:", err);

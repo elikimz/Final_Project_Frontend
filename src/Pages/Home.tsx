@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import car2 from '../assets/car2.jpg'; // Make sure you have a background image in your assets
+import bmw from '../assets/car2.jpg'; // Make sure you have a background image in your assets
 
 const Home = () => {
   return (
     <div
       className="min-h-screen flex flex-col"
       style={{ 
-        backgroundImage: `url(${car2})`, 
+        backgroundImage: `url(${bmw})`, 
         backgroundSize: 'cover', 
         backgroundPosition: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)' // Add a semi-transparent black overlay for better visibility
@@ -14,7 +14,7 @@ const Home = () => {
     >
       <header className="w-full py-4 bg-transparent">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-white">KimExpress Car Hire</div>
+          <div className="text-2xl font-bold text-white">Kim Express Car Hire</div>
           <nav>
             <ul className="flex space-x-6">
               <li><Link to="/" className="text-white hover:text-gray-300">Home</Link></li>
@@ -22,7 +22,7 @@ const Home = () => {
               <li><Link to="/contact" className="text-white hover:text-gray-300">Contact</Link></li>
               <li><Link to="/register" className="text-white hover:text-gray-300">Register</Link></li>
               <li><Link to="/login" className="text-white hover:text-gray-300">Login</Link></li>
-              <li><Link to="/admin/login" className="text-white hover:text-gray-300">Admin</Link></li>
+              {/* <li><Link to="/admin/login" className="text-white hover:text-gray-300">Admin</Link></li> */}
             </ul>
           </nav>
         </div>
@@ -30,7 +30,7 @@ const Home = () => {
 
       <section className="flex-grow flex items-center justify-center">
         <div className="bg-white bg-opacity-90 p-10 rounded-lg shadow-lg max-w-xl mx-auto text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to KimExpress Car Hire</h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Kim Express Car Hire</h1>
           <p className="text-gray-600 mb-8">Your trusted vehicle rental service for all occasions. Book your ride today and experience seamless, stress-free travel.</p>
           <Link to="/Register" className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">Book Now</Link>
         </div>
