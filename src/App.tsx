@@ -19,6 +19,7 @@ import VehiclesAdmin from './Features/Vehicles/VehiclesAdmin'
 import ManageUsers from './Features/users/ManageUsers'
 import CustomerSupportTicketsPage from './Features/customer_support_ticket/customersupport'
 import  FleetManagementPage from './Features/FleetManagement/fleet'
+import SuccessPage from "./components/sucess"
 
 
 
@@ -122,6 +123,11 @@ import  FleetManagementPage from './Features/FleetManagement/fleet'
       {
         path: 'FleetManagementPage',
         element: <FleetManagementPage/>,
+        errorElement: <Error />,
+      },
+      {
+        path: 'SuccessPage',
+        element: <SuccessPage/>,
         errorElement: <Error />,
       }
       

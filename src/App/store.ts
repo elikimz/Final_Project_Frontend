@@ -11,7 +11,7 @@ import {VehicleAPI} from "../Features/Vehicles/vehicleAPI"
 import {LocationAPI} from "../Features/locations/locationAPI"
 import {CustomerSupportTicketsAPI} from "../Features/customer_support_ticket/customersupportAPI"
 import {FleetManagementAPI}  from "../Features/FleetManagement/fleetAPI"
-
+import {PaymentsAPI } from "../Features/payment/paymentAPI"
 
 const persistConfig = {
     key: "root",
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
     [LocationAPI.reducerPath] :LocationAPI.reducer,
     [CustomerSupportTicketsAPI.reducerPath] : CustomerSupportTicketsAPI.reducer,
     [FleetManagementAPI.reducerPath] : FleetManagementAPI.reducer,
-    // Add other reducers here
+    [PaymentsAPI.reducerPath] :PaymentsAPI.reducer,    // Add other reducers here
     
     // Add other reducers here
 });
@@ -42,7 +42,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware ,SpecsAPI.middleware ,BookingAPI.middleware ,VehicleAPI.middleware ,LocationAPI.middleware,CustomerSupportTicketsAPI.middleware,FleetManagementAPI.middleware,CustomerSupportTicketsAPI.middleware),
+        }).concat(UserAPI.middleware, registerAPI.middleware, loginAPI.middleware ,SpecsAPI.middleware ,BookingAPI.middleware ,VehicleAPI.middleware ,LocationAPI.middleware,CustomerSupportTicketsAPI.middleware,FleetManagementAPI.middleware,CustomerSupportTicketsAPI.middleware,PaymentsAPI.middleware),
 });
 
 export const persistor = persistStore(store);

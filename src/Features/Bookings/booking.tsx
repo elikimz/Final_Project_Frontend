@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useGetBookingQuery, useCreateBookingsMutation, useUpdateBookingMutation } from './bookingAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { loadStripe } from '@stripe/stripe-js';
+import { useCreatePaymentMutation } from "../../Features/payment/paymentAPI";
+
+// Initialize Stripe with your public key
+const stripePromise = loadStripe('pk_test_51PfIZ9DBJdkd6Rdp6kRmvy0HsnibAHYubXaKT89f7w0CywtmoqKinMfjlmwQS0fVq85tfEAMOxdZmM84go2WtYDE00xJYbVAId');
 
 export interface Booking {
   id?: number;
   user_id: number;
   vehicle_id: number;
   location_id: number;
-  booking_date?: string; // Changed to optional and use string
-  return_date?: string; // Changed to optional and use string
+  booking_date?: string;
+  return_date?: string;
   total_amount: number;
   booking_status: string;
 }
@@ -18,13 +23,14 @@ function BookingForm() {
   const { data: bookings, isLoading, isError, refetch } = useGetBookingQuery();
   const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
+  const [createPayment] = useCreatePaymentMutation();
 
   const [currentBooking, setCurrentBooking] = useState<Booking>({
     user_id: 0,
     vehicle_id: 0,
     location_id: 0,
-    booking_date: undefined, // Changed to undefined
-    return_date: undefined, // Changed to undefined
+    booking_date: undefined,
+    return_date: undefined,
     total_amount: 0,
     booking_status: ''
   });
@@ -55,8 +61,8 @@ function BookingForm() {
       user_id: userId,
       vehicle_id: vehicleId,
       location_id: locationId,
-      booking_date: undefined, // Changed to undefined
-      return_date: undefined, // Changed to undefined
+      booking_date: undefined,
+      return_date: undefined,
       total_amount: 0,
       booking_status: ''
     });
@@ -83,32 +89,44 @@ function BookingForm() {
 
       console.log('Booking Data to Send:', bookingData);
 
+      let bookingResponse;
       if (currentBooking.id) {
         // Update existing booking
-        const updatedBooking = await updateBooking(bookingData).unwrap();
-        console.log('Updated Booking Response:', updatedBooking);
+        bookingResponse = await updateBooking(bookingData).unwrap();
+        console.log('Updated Booking Response:', bookingResponse);
         toast.success('Booking updated successfully');
-        
-        // Persist booking ID to local storage
-        if (updatedBooking.id) {
-          localStorage.setItem('bookingId', updatedBooking.id.toString());
-        } else {
-          console.warn('No booking ID returned from update response');
-        }
       } else {
         // Create new booking
-        const newBooking = await createBooking(bookingData).unwrap();
-        console.log('New Booking Response:', newBooking);
+        bookingResponse = await createBooking(bookingData).unwrap();
+        console.log('New Booking Response:', bookingResponse);
         toast.success('Booking created successfully');
-        
-        // Persist booking ID to local storage
-        if (newBooking.id) {
-          localStorage.setItem('bookingId', newBooking.id.toString());
-        } else {
-          console.warn('No booking ID returned from create response');
-        }
       }
       
+      // Persist booking ID to local storage
+      if (bookingResponse.id) {
+        localStorage.setItem('bookingId', bookingResponse.id.toString());
+
+        // Create payment and get sessionId
+        const paymentResponse = await createPayment({
+          booking_id: bookingResponse.id,
+          user_id: userId,
+          total_amount: currentBooking.total_amount
+        }).unwrap();
+
+        console.log('Payment Response:', paymentResponse);
+
+        // Redirect to Stripe Checkout
+        const stripe = await stripePromise;
+
+        if (stripe && paymentResponse.url) {
+          window.location.href = paymentResponse.url; // Redirect to Stripe Checkout
+        } else {
+          console.error("Stripe.js failed to load or URL not provided.");
+        }
+      } else {
+        console.warn('No booking ID returned from response');
+      }
+
       refetch();
       resetForm();
     } catch (error) {
@@ -134,7 +152,7 @@ function BookingForm() {
             onChange={(e) =>
               setCurrentBooking({
                 ...currentBooking!,
-                booking_date: e.target.value || undefined, // Changed to undefined
+                booking_date: e.target.value || undefined,
               })
             }
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -149,7 +167,7 @@ function BookingForm() {
             onChange={(e) =>
               setCurrentBooking({
                 ...currentBooking!,
-                return_date: e.target.value || undefined, // Changed to undefined
+                return_date: e.target.value || undefined,
               })
             }
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
