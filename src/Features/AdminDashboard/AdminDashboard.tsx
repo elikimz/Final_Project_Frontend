@@ -47,10 +47,10 @@ const Sidebar = () => {
           </li>
           <li>
             <button
-              onClick={() => handleNavigation('/reports')}
+              onClick={() => handleNavigation('/BookingsList')}
               className="block p-4 hover:bg-gray-700 w-full text-left"
             >
-              Reports
+              Booking List
             </button>
           </li>
           <li>

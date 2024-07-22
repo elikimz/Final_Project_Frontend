@@ -31,7 +31,7 @@ const SuccessPage: React.FC = () => {
       <p className="text-md mb-4">Booking ID: <span className="font-semibold">{bookingId}</span></p>
       <p className="text-md mb-4">Payment Status: <span className="font-semibold">{paymentStatus}</span></p>
       <button
-        onClick={() => navigate('/SuccessPage')}
+        onClick={() => navigate('/')}
         className="mt-6 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg"
       >
         Go to Homepage

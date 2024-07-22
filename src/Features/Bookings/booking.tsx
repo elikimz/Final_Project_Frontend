@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCreatePaymentMutation } from "../../Features/payment/paymentAPI";
+import { useNavigate } from 'react-router-dom';
 
 // Initialize Stripe with your public key
 const stripePromise = loadStripe('pk_test_51PfIZ9DBJdkd6Rdp6kRmvy0HsnibAHYubXaKT89f7w0CywtmoqKinMfjlmwQS0fVq85tfEAMOxdZmM84go2WtYDE00xJYbVAId');
@@ -20,6 +21,7 @@ export interface Booking {
 }
 
 function BookingForm() {
+  const navigate = useNavigate();
   const { data: bookings, isLoading, isError, refetch } = useGetBookingQuery();
   const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
@@ -38,15 +40,18 @@ function BookingForm() {
   const [userId, setUserId] = useState<number>(0);
   const [vehicleId, setVehicleId] = useState<number>(0);
   const [locationId, setLocationId] = useState<number>(0);
+  const [rentalRate, setRentalRate] = useState<number>(0);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
     const storedVehicleId = localStorage.getItem('vehicleId');
     const storedLocationId = localStorage.getItem('locationId');
+    const storedRentalRate = localStorage.getItem('rentalRate');
 
     if (storedUserId) setUserId(parseInt(storedUserId));
     if (storedVehicleId) setVehicleId(parseInt(storedVehicleId));
     if (storedLocationId) setLocationId(parseInt(storedLocationId));
+    if (storedRentalRate) setRentalRate(parseFloat(storedRentalRate));
 
     setCurrentBooking((prevBooking) => ({
       ...prevBooking,
@@ -55,6 +60,20 @@ function BookingForm() {
       location_id: storedLocationId ? parseInt(storedLocationId) : 0
     }));
   }, []);
+
+  useEffect(() => {
+    // Calculate the total amount based on rental rate and booking dates
+    if (rentalRate && currentBooking.booking_date && currentBooking.return_date) {
+      const bookingDate = new Date(currentBooking.booking_date);
+      const returnDate = new Date(currentBooking.return_date);
+      const days = Math.ceil((returnDate.getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
+      const totalAmount = days * rentalRate;
+      setCurrentBooking((prevBooking) => ({
+        ...prevBooking,
+        total_amount: totalAmount
+      }));
+    }
+  }, [currentBooking.booking_date, currentBooking.return_date, rentalRate]);
 
   const resetForm = () => {
     setCurrentBooking({
@@ -84,7 +103,7 @@ function BookingForm() {
         user_id: userId,
         vehicle_id: vehicleId,
         location_id: locationId,
-        total_amount: parseInt(currentBooking.total_amount.toString())
+        total_amount: parseFloat(currentBooking.total_amount.toString())
       };
 
       console.log('Booking Data to Send:', bookingData);
@@ -101,30 +120,28 @@ function BookingForm() {
         console.log('New Booking Response:', bookingResponse);
         toast.success('Booking created successfully');
       }
-      
+
       // Persist booking ID to local storage
       if (bookingResponse.id) {
         localStorage.setItem('bookingId', bookingResponse.id.toString());
-
-        // Create payment and get sessionId
-        const paymentResponse = await createPayment({
-          booking_id: bookingResponse.id,
-          user_id: userId,
-          total_amount: currentBooking.total_amount
-        }).unwrap();
-
-        console.log('Payment Response:', paymentResponse);
-
-        // Redirect to Stripe Checkout
-        const stripe = await stripePromise;
-
-        if (stripe && paymentResponse.url) {
-          window.location.href = paymentResponse.url; // Redirect to Stripe Checkout
-        } else {
-          console.error("Stripe.js failed to load or URL not provided.");
-        }
       } else {
         console.warn('No booking ID returned from response');
+      }
+
+      // Create payment session
+      const paymentResponse = await createPayment({
+        booking_id: bookingResponse.id,
+        user_id: userId,
+        total_amount: currentBooking.total_amount
+      }).unwrap();
+
+      if (paymentResponse.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = paymentResponse.url;
+        // Navigate to Vehicles after successful payment
+        navigate('/vehicles');
+      } else {
+        console.error('No redirect URL returned from payment response');
       }
 
       refetch();
@@ -179,14 +196,8 @@ function BookingForm() {
           <input
             type="number"
             value={currentBooking?.total_amount || ''}
-            onChange={(e) =>
-              setCurrentBooking({
-                ...currentBooking!,
-                total_amount: parseInt(e.target.value),
-              })
-            }
-            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
+            readOnly
+            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 bg-gray-100"
           />
         </label>
         <label className="block mb-6">

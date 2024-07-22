@@ -33,8 +33,9 @@ const Vehicles: React.FC = () => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(numberValue);
     };
 
-    const handleBookNow = (vehicleId: number) => {
+    const handleBookNow = (vehicleId: number, rentalRate: string) => {
         localStorage.setItem("vehicleId", vehicleId.toString());
+        localStorage.setItem("rentalRate", rentalRate);
     };
 
     if (isLoading) {
@@ -61,7 +62,7 @@ const Vehicles: React.FC = () => {
                                             <Link
                                                 to="/CreateLocationForm"
                                                 className="bg-teal-500 text-white px-4 py-2 rounded-md inline-block font-bold hover:bg-teal-600"
-                                                onClick={() => handleBookNow(vehicle.id)}
+                                                onClick={() => handleBookNow(vehicle.id, vehicle.rental_rate)}
                                             >
                                                 Book Now
                                             </Link>
