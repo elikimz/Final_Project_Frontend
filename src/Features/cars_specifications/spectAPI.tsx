@@ -18,7 +18,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const SpecsAPI = createApi({
     reducerPath: 'SpecsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono.onrender.com/' }),
     endpoints: (builder) => ({
         getVehicleSpecification: builder.query<VehicleSpecification[], void>({
             query: () => 'vehicalspecification',

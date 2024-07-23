@@ -12,7 +12,7 @@ export interface CustomerSupportTickets{
 
 export const CustomerSupportTicketsAPI = createApi({
     reducerPath: 'customerSupportTicketsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono.onrender.com/' }),
     endpoints: (builder) => ({
         getCustomerSupportTicket: builder.query<CustomerSupportTickets[], void>({
             query: () => 'CustomerSupportTickets',

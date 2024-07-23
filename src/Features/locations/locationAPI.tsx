@@ -12,7 +12,7 @@ export interface Location {
 
 export const LocationAPI = createApi({
     reducerPath: 'LocationsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono.onrender.com/' }),
     endpoints: (builder) => ({
         getLocations: builder.query<Location[], void>({
             query: () => 'Locations',

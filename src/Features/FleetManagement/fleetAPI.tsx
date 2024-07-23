@@ -17,7 +17,7 @@ export interface FleetManagement {
 
 export const FleetManagementAPI = createApi({
   reducerPath: 'fleetManagementAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000'}),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono.onrender.com/'}),
   endpoints: (builder) => ({
     getFleetItems: builder.query<FleetManagement[], void>({
       query: () => 'FleetManagement',

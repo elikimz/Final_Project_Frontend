@@ -11,7 +11,7 @@ export interface Vehicle {
 
 export const VehicleAPI = createApi({
     reducerPath: 'VehicleAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono.onrender.com/' }),
     endpoints: (builder) => ({
         getVehicles: builder.query<Vehicle[], void>({
             query: () => 'Vehicles', // Make sure this matches your API endpoint

@@ -137,10 +137,10 @@ function BookingForm() {
       if (paymentResponse.url) {
         // Redirect to Stripe Checkout
         window.location.href = paymentResponse.url;
-        // Navigate to Vehicles after successful payment
-        navigate('/vehicles');
       } else {
         console.error('No redirect URL returned from payment response');
+        // Navigate to Vehicles in case of no URL
+        navigate('/vehicles');
       }
 
       refetch();
