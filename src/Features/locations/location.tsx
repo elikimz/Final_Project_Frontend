@@ -10,7 +10,7 @@ const LocationPage = () => {
     const [name, setName] = useState('');
     const [contactPhone, setContactPhone] = useState('');
     const [address, setAddress] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isCreateSuccess) {
@@ -35,7 +35,7 @@ const LocationPage = () => {
             }).unwrap();
             console.log("Creation response:", response);
 
-            // Refetch locations to get the updated list
+            // Wait for refetch to complete
             await refetch();
 
             // Find the newly created location from the fetched list
