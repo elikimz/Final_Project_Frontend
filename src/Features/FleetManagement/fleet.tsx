@@ -62,8 +62,9 @@ const FleetManagementPage: React.FC = () => {
       maintenance_cost: parseFloat(formData.maintenance_cost),
     };
 
+    console.log('Form data being submitted:', numericFormData);
+
     try {
-      console.log('Form data being submitted:', numericFormData);
       if (isEditing && currentId !== null) {
         console.log('Updating fleet item with ID:', currentId);
         await updateFleetItem({ id: currentId, ...numericFormData }).unwrap();
@@ -235,6 +236,7 @@ const FleetManagementPage: React.FC = () => {
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr>
+                <th className="border border-gray-300 px-4 py-2">ID</th>
                 <th className="border border-gray-300 px-4 py-2">Vehicle ID</th>
                 <th className="border border-gray-300 px-4 py-2">Status</th>
                 <th className="border border-gray-300 px-4 py-2">Acquisition Date</th>
@@ -245,8 +247,9 @@ const FleetManagementPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {fleetItems.map(item => (
+              {fleetItems.map((item) => (
                 <tr key={item.id}>
+                  <td className="border border-gray-300 px-4 py-2">{item.id}</td>
                   <td className="border border-gray-300 px-4 py-2">{item.vehicleId}</td>
                   <td className="border border-gray-300 px-4 py-2">{item.status}</td>
                   <td className="border border-gray-300 px-4 py-2">{item.acquisition_date}</td>
@@ -256,13 +259,13 @@ const FleetManagementPage: React.FC = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     <button
                       onClick={() => handleEditClick(item)}
-                      className="bg-yellow-500 text-white py-1 px-3 rounded mr-2"
+                      className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteFleetItem(item.id)}
-                      className="bg-red-500 text-white py-1 px-3 rounded"
+                      className="bg-red-500 text-white py-1 px-2 rounded"
                     >
                       Delete
                     </button>
@@ -272,7 +275,7 @@ const FleetManagementPage: React.FC = () => {
             </tbody>
           </table>
         ) : (
-          <p>No fleet items found.</p>
+          <p className="text-gray-700">No fleet items found.</p>
         )}
       </div>
     </div>

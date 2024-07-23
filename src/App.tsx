@@ -21,6 +21,7 @@ import CustomerSupportTicketsPage from './Features/customer_support_ticket/custo
 import  FleetManagementPage from './Features/FleetManagement/fleet'
 import BookingsList from "./Features/Bookings/BookingsQuery"
 import SuccessPage from './Pages/sucess'
+import AddUserForm from './Features/users/Adduser'
 
 
 
@@ -135,10 +136,12 @@ import SuccessPage from './Pages/sucess'
         path: 'SuccessPage',
         element: <SuccessPage/>,
         errorElement: <Error />,
-      }
-      
-      
-      
+      },
+      {
+        path: 'AddUserForm',
+        element: <AddUserForm onUserAdded={() => console.log('User added')} />,
+        errorElement: <Error />,
+      },
       
       
       

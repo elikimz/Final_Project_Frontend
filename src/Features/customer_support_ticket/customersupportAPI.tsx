@@ -29,7 +29,7 @@ export const CustomerSupportTicketsAPI = createApi({
         }),
         deleteTicket: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
-                url: `CustomerSupportTickets${id}`,
+                url: `CustomerSupportTickets/${id}`,
                 method: 'DELETE',
                 // providesTags: ['deleteTicketTags'],
             }),
