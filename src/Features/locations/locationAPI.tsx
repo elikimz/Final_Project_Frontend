@@ -23,6 +23,16 @@ export const LocationAPI = createApi({
                 method: 'POST',
                 body: newLocation,
             }),
+            // Add an `onQueryStarted` lifecycle event to handle side-effects
+            async onQueryStarted(_newLocation, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    // Save the new location ID to local storage
+                    localStorage.setItem('locationId', data.id.toString());
+                } catch (error) {
+                    console.error('Failed to save location ID to local storage', error);
+                }
+            },
         }),
     }),
 });
