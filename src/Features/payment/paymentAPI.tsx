@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface Payment {
+  url: any;
   id: number;
   user_id: number;
   amount: number;
@@ -8,6 +9,8 @@ export interface Payment {
   status: string;
   created_at: string;
   updated_at: string;
+  booking_id: number;
+  total_amount: number;
 }
 
 export const PaymentsAPI = createApi({

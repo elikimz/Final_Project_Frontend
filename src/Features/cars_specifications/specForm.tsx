@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   useGetVehicleSpecificationQuery,
   useCreateSpecificationMutation,
@@ -8,7 +8,11 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-interface VehicleSpecification {
+// Make sure this interface matches the API response
+export interface VehicleSpecification {
+  rental_rate: number;
+  availability: any;
+  image_url: string | undefined;
   id: number;
   manufacturer: string;
   model: string;
@@ -19,9 +23,6 @@ interface VehicleSpecification {
   seating_capacity: number;
   color: string;
   features: string;
-  image_url: string; // Add image_url field
-  rental_rate: number;
-  availability: boolean;
 }
 
 function SpecsForm() {
@@ -54,8 +55,9 @@ function SpecsForm() {
         await updateSpecification(spec).unwrap();
         toast.success('Specification updated successfully');
       } else {
-        await createSpecification(spec).unwrap();
+        const createdSpec = await createSpecification(spec).unwrap();
         toast.success('Specification created successfully');
+        localStorage.setItem('vehicleSpecificationId', createdSpec.id.toString());
       }
       refetch();
       closeModal();
@@ -98,7 +100,7 @@ function SpecsForm() {
                   <h3 className="text-lg font-bold text-white">
                     {spec.manufacturer} {spec.model}
                   </h3>
-                  <p className="text-sm text-white">ID: {spec.id}</p> {/* Display Vehicle ID in purple region */}
+                  <p className="text-sm text-white">ID: {spec.id}</p>
                   <div className="flex justify-between mt-2">
                     <p className="text-sm text-white">{spec.year}</p>
                     <div>
@@ -160,6 +162,7 @@ function SpecsForm() {
               }}
               className="flex flex-wrap -mx-2"
             >
+              {/* Form fields here */}
               <div className="w-full md:w-1/2 px-2">
                 <label className="block mb-2">
                   Manufacturer:
@@ -283,23 +286,22 @@ function SpecsForm() {
                     value={currentSpec?.image_url || ''}
                     onChange={(e) => setCurrentSpec({ ...currentSpec!, image_url: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
-                    required
                   />
                 </label>
               </div>
-              <div className="w-full px-2 mt-4 flex justify-end">
-                <button
-                  type="button"
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                  onClick={closeModal}
-                >
-                  Cancel
-                </button>
+              <div className="w-full px-2">
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   {currentSpec ? 'Update' : 'Create'}
+                </button>
+                <button
+                  type="button"
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
+                  onClick={closeModal}
+                >
+                  Cancel
                 </button>
               </div>
             </form>

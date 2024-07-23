@@ -1,12 +1,20 @@
 import React from 'react';
 import { useGetBookingQuery } from './bookingAPI'; // Adjust the import path according to your setup
-import { Booking } from './types'; // Adjust the import path according to your setup
+import { Booking } from './bookingAPI'; // Adjust the import path according to your setup
 
 const BookingsList: React.FC = () => {
   const { data: bookings, isLoading, isError, error } = useGetBookingQuery();
 
   if (isLoading) return <p>Loading bookings...</p>;
-  if (isError) return <p>Error loading bookings: {error?.message}</p>;
+
+  // Properly handle error type
+  if (isError) {
+    let errorMessage = 'An error occurred while loading bookings.';
+    if ('data' in error && error.data && typeof error.data === 'object' && 'message' in error.data) {
+      errorMessage = (error.data as { message?: string }).message || errorMessage;
+    }
+    return <p>Error loading bookings: {errorMessage}</p>;
+  }
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">

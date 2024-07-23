@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useGetBookingQuery, useCreateBookingsMutation, useUpdateBookingMutation } from './bookingAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { loadStripe } from '@stripe/stripe-js';
 import { useCreatePaymentMutation } from "../../Features/payment/paymentAPI";
 import { useNavigate } from 'react-router-dom';
-
-// Initialize Stripe with your public key
-const stripePromise = loadStripe('pk_test_51PfIZ9DBJdkd6Rdp6kRmvy0HsnibAHYubXaKT89f7w0CywtmoqKinMfjlmwQS0fVq85tfEAMOxdZmM84go2WtYDE00xJYbVAId');
 
 export interface Booking {
   id?: number;
@@ -22,7 +18,7 @@ export interface Booking {
 
 function BookingForm() {
   const navigate = useNavigate();
-  const { data: bookings, isLoading, isError, refetch } = useGetBookingQuery();
+  const { refetch } = useGetBookingQuery();
   const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
   const [createPayment] = useCreatePaymentMutation();
@@ -31,8 +27,8 @@ function BookingForm() {
     user_id: 0,
     vehicle_id: 0,
     location_id: 0,
-    booking_date: undefined,
-    return_date: undefined,
+    booking_date: '',
+    return_date: '',
     total_amount: 0,
     booking_status: ''
   });
@@ -48,25 +44,28 @@ function BookingForm() {
     const storedLocationId = localStorage.getItem('locationId');
     const storedRentalRate = localStorage.getItem('rentalRate');
 
-    if (storedUserId) setUserId(parseInt(storedUserId));
-    if (storedVehicleId) setVehicleId(parseInt(storedVehicleId));
-    if (storedLocationId) setLocationId(parseInt(storedLocationId));
+    if (storedUserId) setUserId(parseInt(storedUserId, 10));
+    if (storedVehicleId) setVehicleId(parseInt(storedVehicleId, 10));
+    if (storedLocationId) setLocationId(parseInt(storedLocationId, 10));
     if (storedRentalRate) setRentalRate(parseFloat(storedRentalRate));
 
     setCurrentBooking((prevBooking) => ({
       ...prevBooking,
-      user_id: storedUserId ? parseInt(storedUserId) : 0,
-      vehicle_id: storedVehicleId ? parseInt(storedVehicleId) : 0,
-      location_id: storedLocationId ? parseInt(storedLocationId) : 0
+      user_id: storedUserId ? parseInt(storedUserId, 10) : 0,
+      vehicle_id: storedVehicleId ? parseInt(storedVehicleId, 10) : 0,
+      location_id: storedLocationId ? parseInt(storedLocationId, 10) : 0
     }));
   }, []);
 
   useEffect(() => {
-    // Calculate the total amount based on rental rate and booking dates
     if (rentalRate && currentBooking.booking_date && currentBooking.return_date) {
       const bookingDate = new Date(currentBooking.booking_date);
       const returnDate = new Date(currentBooking.return_date);
       const days = Math.ceil((returnDate.getTime() - bookingDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (days < 0) {
+        toast.error('Return date cannot be earlier than booking date');
+        return;
+      }
       const totalAmount = days * rentalRate;
       setCurrentBooking((prevBooking) => ({
         ...prevBooking,
@@ -80,8 +79,8 @@ function BookingForm() {
       user_id: userId,
       vehicle_id: vehicleId,
       location_id: locationId,
-      booking_date: undefined,
-      return_date: undefined,
+      booking_date: '',
+      return_date: '',
       total_amount: 0,
       booking_status: ''
     });
@@ -122,7 +121,7 @@ function BookingForm() {
       }
 
       // Persist booking ID to local storage
-      if (bookingResponse.id) {
+      if (bookingResponse && bookingResponse.id) {
         localStorage.setItem('bookingId', bookingResponse.id.toString());
       } else {
         console.warn('No booking ID returned from response');
@@ -130,7 +129,7 @@ function BookingForm() {
 
       // Create payment session
       const paymentResponse = await createPayment({
-        booking_id: bookingResponse.id,
+        booking_id: bookingResponse.id || 0,
         user_id: userId,
         total_amount: currentBooking.total_amount
       }).unwrap();
@@ -169,7 +168,7 @@ function BookingForm() {
             onChange={(e) =>
               setCurrentBooking({
                 ...currentBooking!,
-                booking_date: e.target.value || undefined,
+                booking_date: e.target.value || '',
               })
             }
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -184,7 +183,7 @@ function BookingForm() {
             onChange={(e) =>
               setCurrentBooking({
                 ...currentBooking!,
-                return_date: e.target.value || undefined,
+                return_date: e.target.value || '',
               })
             }
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -215,33 +214,16 @@ function BookingForm() {
             required
           />
         </label>
-        <div className="flex justify-end space-x-2">
-          <button
-            type="button"
-            onClick={resetForm}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg"
-          >
-            Reset
-          </button>
+        <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg"
+            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700"
           >
-            {currentBooking?.id ? 'Update' : 'Create'}
+            {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
           </button>
         </div>
       </form>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </div>
   );
 }

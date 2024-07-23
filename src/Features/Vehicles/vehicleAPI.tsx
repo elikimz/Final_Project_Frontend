@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface Vehicle {
+    vehicleSpecifications: any;
     id: number;
     vehicleSpec_id: number;
-    rental_rate: string;
+    rental_rate:string;
     availability: boolean;
     address: string;
 }

@@ -7,10 +7,13 @@ export interface FleetManagement {
   id: number;
   status: string;
   acquisition_date: string;
-  depreciation_rate: string;
-  current_value: string;
-  maintenance_cost: string;
+  depreciation_rate:number;
+  current_value: number;
+  maintenance_cost: number;
+
+
 }
+
 
 export const FleetManagementAPI = createApi({
   reducerPath: 'fleetManagementAPI',

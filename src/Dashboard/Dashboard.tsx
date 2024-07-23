@@ -5,7 +5,7 @@
   //import SpecsForm from "../Features/cars_specifications/specForm";
 
 //import BookingForm from '../Features/Bookings/booking'
-  import ProfileManagement from '../Features/register/Profilemanagement'
+  //import ProfileManagement from '../Features/register/Profilemanagement'
    import Vehicle from '../Features/Vehicles/vehicle'
   //  import CreateLocationForm from "../Features/locations/location"
   import AdminDashboard from "../Features/AdminDashboard/AdminDashboard"

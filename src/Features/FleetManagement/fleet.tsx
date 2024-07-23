@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import styles for Toastify
 const FleetManagementPage: React.FC = () => {
   const { data: fleetItems, isLoading, isError, refetch } = useGetFleetItemsQuery();
   const [createFleetItem, { isLoading: isCreating }] = useCreateFleetItemMutation();
-  const [deleteFleetItem, { isLoading: isDeleting }] = useDeleteFleetItemMutation();
+  const [deleteFleetItem] = useDeleteFleetItemMutation();
   const [updateFleetItem, { isLoading: isUpdating }] = useUpdateFleetItemMutation();
 
   const [formData, setFormData] = useState({

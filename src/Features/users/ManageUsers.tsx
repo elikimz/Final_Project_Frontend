@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import  { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useGetUsersQuery, useUpdateUserMutation, useDeleteUserMutation, User } from './usersAPI';
 import { useLogoutMutation } from '../login/login.API';
@@ -21,7 +21,6 @@ function ManageUsers() {
     address: '',
   });
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   useEffect(() => {
     refetch();
@@ -70,8 +69,6 @@ function ManageUsers() {
 
   const handleDelete = async (id: number) => {
     await deleteUser(id);
-    setDeleteSuccess(true);
-    setTimeout(() => setDeleteSuccess(false), 3000);
     refetch();
   };
 
@@ -121,7 +118,7 @@ function ManageUsers() {
                       </button>
                       <button
                         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => handleDelete(Number(user.id))}
                         disabled={isDeleting}
                       >
                         {isDeleting ? 'Deleting...' : 'Delete'}
@@ -203,7 +200,7 @@ function ManageUsers() {
                   id="address"
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between">
                 <button
                   type="button"
                   onClick={handleUpdate}
@@ -215,7 +212,7 @@ function ManageUsers() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-700"
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
                 >
                   Close
                 </button>
@@ -223,17 +220,17 @@ function ManageUsers() {
             </form>
           </div>
         </Modal>
+      </div>
 
-        {/* Logout Button */}
-        <div className="mt-4">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? 'Logging out...' : 'Logout'}
-          </button>
-        </div>
+      {/* Sidebar */}
+      <div className="w-64 bg-gray-800 text-white p-4">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+          disabled={isLoggingOut}
+        >
+          {isLoggingOut ? 'Logging out...' : 'Logout'}
+        </button>
       </div>
     </div>
   );

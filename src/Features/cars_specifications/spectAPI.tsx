@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
- export interface Specification {
+ export interface VehicleSpecification {
+    rental_rate: number;
+    availability: any;
     image_url: string | undefined;
     id: number;
     manufacturer: string ;
@@ -18,11 +20,11 @@ export const SpecsAPI = createApi({
     reducerPath: 'SpecsAPI',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
     endpoints: (builder) => ({
-        getVehicleSpecification: builder.query<Specification[], void>({
+        getVehicleSpecification: builder.query<VehicleSpecification[], void>({
             query: () => 'vehicalspecification',
             //  providesTags: ['getVehicleSpecificationsTag'],
         }),
-        createSpecification: builder.mutation<Specification, Partial<Specification>>({
+        createSpecification: builder.mutation<VehicleSpecification, Partial<VehicleSpecification>>({
             query: (newSpecifications) => ({
                 url: 'vehicalspecification',
                 method: 'POST',
@@ -39,7 +41,7 @@ export const SpecsAPI = createApi({
             }),
            // invalidatesTags: ['getUsersTag'],
         }),
-        updateSpecification: builder.mutation<Specification, Partial<Specification>>({
+        updateSpecification: builder.mutation<VehicleSpecification, Partial<VehicleSpecification>>({
             query: ({ id, ...rest }) => ({
                 url: `vehicalspecification/${id}`,
                 method: 'PUT',

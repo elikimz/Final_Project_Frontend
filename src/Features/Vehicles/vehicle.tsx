@@ -1,29 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useGetVehiclesQuery } from './vehicleAPI';
+import { useGetVehiclesQuery, Vehicle } from './vehicleAPI';
 import Navbar from "../../components/navbar";
 
-interface VehicleSpecifications {
-    id: number;
-    manufacturer: string;
-    model: string;
-    year: number;
-    fuel_type: string;
-    engine_capacity: string;
-    transmission: string;
-    seating_capacity: number;
-    color: string;
-    features: string;
-    image_url: string;
-}
 
-interface Vehicle {
-    id: number;
-    vehicleSpec_id: number;
-    rental_rate: string;
-    availability: boolean;
-    vehicleSpecifications: VehicleSpecifications | null; // Allow vehicleSpecifications to be null
-}
 
 const Vehicles: React.FC = () => {
     const { data: vehicles, isLoading, isError } = useGetVehiclesQuery();
@@ -51,7 +31,7 @@ const Vehicles: React.FC = () => {
             <Navbar />
             <div className="p-6 bg-gray-100 min-h-screen">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {vehicles && vehicles.map((vehicle: Vehicles) => (
+                    {vehicles && vehicles.map((vehicle: Vehicle) => (
                         <div key={vehicle.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
                             {vehicle.vehicleSpecifications && (
                                 <>

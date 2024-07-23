@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
  export interface Booking {
+    location_id: number;
+    created_at: any;
+    updated_at: any;
+    vehicle_id: number;
+    user_id: number;
     id: number;
     booking_date: string ;
     return_date: string ;

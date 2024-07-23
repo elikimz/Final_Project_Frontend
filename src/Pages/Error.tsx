@@ -2,7 +2,7 @@ import { Link, useRouteError } from "react-router-dom";
 import { ArrowLeft } from 'lucide-react';
 
 function Error() {
-  const error = useRouteError();
+  const error = useRouteError() as { statusText?: string; message?: string };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
@@ -14,7 +14,7 @@ function Error() {
         <p className="mt-4 text-lg leading-7 text-gray-600">
           Sorry, we couldn't find the page you're looking for.
         </p>
-        {error?.statusText || error.message ? (
+        {error.statusText || error.message ? (
           <p className="mt-2 text-sm text-gray-500">
             {error.statusText || error.message}
           </p>
@@ -34,4 +34,3 @@ function Error() {
 }
 
 export default Error;
-

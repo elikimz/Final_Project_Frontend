@@ -13,7 +13,7 @@ const RegisterForm = () => {
     confirmPassword: ''
   });
 
-  const [registerUser, { isLoading, isSuccess, isError, error }] = useRegisterUserMutation();
+  const [registerUser, { isLoading, isSuccess, isError,}] = useRegisterUserMutation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const RegisterForm = () => {
             </div>
             {isError && (
               <div className="mt-4 text-red-500 text-center">
-                {error?.data || "An error occurred during registration"}
+                {/* {error?.data || "An error occurred during registration"} */}
               </div>
             )}
           </form>

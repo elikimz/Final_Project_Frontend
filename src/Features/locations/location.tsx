@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const LocationPage = () => {
-    const [createLocation, { isSuccess: isCreateSuccess, isError: isCreateError }] = useCreateLocationMutation();
+    const [createLocation, { isSuccess: isCreateSuccess }] = useCreateLocationMutation();
     const { data: locations, refetch } = useGetLocationsQuery();
     const [name, setName] = useState('');
     const [contactPhone, setContactPhone] = useState('');
