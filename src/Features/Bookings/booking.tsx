@@ -18,10 +18,10 @@ export interface Booking {
 
 function BookingForm() {
   const navigate = useNavigate();
-  const { refetch } = useGetBookingQuery();
+  useGetBookingQuery();
   const [createBooking] = useCreateBookingsMutation();
   const [updateBooking] = useUpdateBookingMutation();
-  const [createPayment] = useCreatePaymentMutation();
+  const [] = useCreatePaymentMutation();
 
   const [currentBooking, setCurrentBooking] = useState<Booking>({
     user_id: 0,
@@ -124,53 +124,32 @@ function BookingForm() {
       if (bookingResponse && bookingResponse.id) {
         localStorage.setItem('bookingId', bookingResponse.id.toString());
       } else {
-        console.warn('No booking ID returned from response');
+        console.error('Booking ID missing in response');
       }
 
-      // Create payment session
-      const paymentResponse = await createPayment({
-        booking_id: bookingResponse.id || 0,
-        user_id: userId,
-        total_amount: currentBooking.total_amount
-      }).unwrap();
+      // Navigate to another page or perform additional actions
+      navigate('/BookingConfirmationPage');
 
-      if (paymentResponse.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = paymentResponse.url;
-      } else {
-        console.error('No redirect URL returned from payment response');
-        // Navigate to Vehicles in case of no URL
-        navigate('/vehicles');
-      }
-
-      refetch();
+      // Optionally reset the form
       resetForm();
     } catch (error) {
-      console.error('Failed to update/create booking:', error);
-      toast.error('Failed to update/create booking');
-      if ((error as { data?: unknown })?.data) {
-        console.error('Error data:', (error as { data?: unknown }).data);
-      }
+      console.error('Error creating or updating booking:', error);
+      toast.error('Failed to create/update booking');
     }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-teal-600">
-        {currentBooking?.id ? 'Update Booking' : 'Create New Booking'}
-      </h2>
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
+      <ToastContainer />
+      <h2 className="text-2xl font-bold mb-6 text-teal-600">Booking Form</h2>
       <form onSubmit={handleCreateOrUpdate}>
+        {/* Other form fields for booking details */}
         <label className="block mb-4">
           <span className="text-gray-700">Booking Date:</span>
           <input
             type="date"
-            value={currentBooking?.booking_date || ''}
-            onChange={(e) =>
-              setCurrentBooking({
-                ...currentBooking!,
-                booking_date: e.target.value || '',
-              })
-            }
+            value={currentBooking.booking_date || ''}
+            onChange={(e) => setCurrentBooking(prev => ({ ...prev, booking_date: e.target.value }))}
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
             required
           />
@@ -179,13 +158,8 @@ function BookingForm() {
           <span className="text-gray-700">Return Date:</span>
           <input
             type="date"
-            value={currentBooking?.return_date || ''}
-            onChange={(e) =>
-              setCurrentBooking({
-                ...currentBooking!,
-                return_date: e.target.value || '',
-              })
-            }
+            value={currentBooking.return_date || ''}
+            onChange={(e) => setCurrentBooking(prev => ({ ...prev, return_date: e.target.value }))}
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
             required
           />
@@ -194,36 +168,19 @@ function BookingForm() {
           <span className="text-gray-700">Total Amount:</span>
           <input
             type="number"
-            value={currentBooking?.total_amount || ''}
-            readOnly
-            className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 bg-gray-100"
-          />
-        </label>
-        <label className="block mb-6">
-          <span className="text-gray-700">Booking Status:</span>
-          <input
-            type="text"
-            value={currentBooking?.booking_status || ''}
-            onChange={(e) =>
-              setCurrentBooking({
-                ...currentBooking!,
-                booking_status: e.target.value,
-              })
-            }
+            value={currentBooking.total_amount || 0}
+            onChange={(e) => setCurrentBooking(prev => ({ ...prev, total_amount: parseFloat(e.target.value) }))}
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
+            readOnly
           />
         </label>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700"
-          >
-            {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          {currentBooking.id ? 'Update Booking' : 'Create Booking'}
+        </button>
       </form>
-      <ToastContainer />
     </div>
   );
 }

@@ -45,7 +45,11 @@ const LocationPage = () => {
             await refetch();
 
             // Find the newly created location from the fetched list
-            const createdLocation = locations?.find(location => location.name === name && location.contact_phone === contactPhone && location.address === address);
+            const createdLocation = locations?.find(location =>
+                location.name === name &&
+                location.contact_phone === contactPhone &&
+                location.address === address
+            );
 
             if (createdLocation) {
                 setNewLocationId(createdLocation.id);
