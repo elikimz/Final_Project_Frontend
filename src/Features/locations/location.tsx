@@ -10,24 +10,30 @@ const LocationPage = () => {
     const [name, setName] = useState('');
     const [contactPhone, setContactPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [newLocationId, setNewLocationId] = useState<number | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isCreateSuccess) {
-            // Refetch locations after creation
             refetch();
         }
     }, [isCreateSuccess, refetch]);
 
     useEffect(() => {
-        // Log the locations to check if they are fetched correctly
         console.log("Fetched locations:", locations);
     }, [locations]);
+
+    useEffect(() => {
+        if (newLocationId) {
+            localStorage.setItem('locationId', newLocationId.toString());
+            console.log("Persisted location ID:", newLocationId);
+            navigate('/Booking_form');
+        }
+    }, [newLocationId, navigate]);
 
     const handleCreateLocation = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Create location
             const response = await createLocation({
                 name,
                 contact_phone: contactPhone,
@@ -42,8 +48,7 @@ const LocationPage = () => {
             const createdLocation = locations?.find(location => location.name === name && location.contact_phone === contactPhone && location.address === address);
 
             if (createdLocation) {
-                localStorage.setItem('locationId', createdLocation.id.toString()); // Store location ID in local storage
-                console.log("Persisted location ID:", createdLocation.id);
+                setNewLocationId(createdLocation.id);
             } else {
                 console.error("Created location not found in fetched locations.");
             }
@@ -52,7 +57,6 @@ const LocationPage = () => {
             setName('');
             setContactPhone('');
             setAddress('');
-            navigate('/Booking_form'); // Navigate to the desired page
         } catch (error) {
             console.error('Failed to create location:', error);
             toast.error('Failed to create location');
