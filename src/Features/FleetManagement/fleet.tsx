@@ -10,7 +10,7 @@ const FleetManagementPage: React.FC = () => {
   const [updateFleetItem, { isLoading: isUpdating }] = useUpdateFleetItemMutation();
 
   const [formData, setFormData] = useState({
-    vehicle_id: '', 
+    vehicleId: '', 
     status: '',
     acquisition_date: '',
     depreciation_rate: '',
@@ -28,8 +28,8 @@ const FleetManagementPage: React.FC = () => {
       console.log('Retrieved vehicleId from localStorage:', vehicleId);
       if (!isNaN(vehicleId)) {
         setFormData((prevData) => {
-          console.log('Form data with vehicleId from localStorage:', { ...prevData, vehicle_id: vehicleId.toString() });
-          return { ...prevData, vehicle_id: vehicleId.toString() };
+          console.log('Form data with vehicleId from localStorage:', { ...prevData, vehicleId: vehicleId.toString() });
+          return { ...prevData, vehicleId: vehicleId.toString() };
         });
       } else {
         console.error('Invalid vehicleId in local storage:', storedVehicleId);
@@ -56,7 +56,7 @@ const FleetManagementPage: React.FC = () => {
 
     const numericFormData = {
       ...formData,
-      vehicle_id: parseInt(formData.vehicle_id, 10),
+      vehicleId: parseInt(formData.vehicleId, 10),
       depreciation_rate: parseFloat(formData.depreciation_rate),
       current_value: parseFloat(formData.current_value),
       maintenance_cost: parseFloat(formData.maintenance_cost),
@@ -75,7 +75,7 @@ const FleetManagementPage: React.FC = () => {
       }
       await refetch();
       setFormData({
-        vehicle_id: '',
+        vehicleId: '',
         status: '',
         acquisition_date: '',
         depreciation_rate: '',
@@ -95,7 +95,7 @@ const FleetManagementPage: React.FC = () => {
   const handleEditClick = (item: any) => {
     console.log('Editing fleet item:', item);
     setFormData({
-      vehicle_id: item.vehicle_id.toString(),
+      vehicleId: item.vehicleId.toString(),
       status: item.status,
       acquisition_date: item.acquisition_date,
       depreciation_rate: item.depreciation_rate.toString(),
@@ -109,7 +109,7 @@ const FleetManagementPage: React.FC = () => {
 
   const handleCreateClick = () => {
     setFormData({
-      vehicle_id: '',
+      vehicleId: '',
       status: '',
       acquisition_date: '',
       depreciation_rate: '',
@@ -160,8 +160,8 @@ const FleetManagementPage: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700">Vehicle ID</label>
               <input
                 type="text"
-                name="vehicle_id"
-                value={formData.vehicle_id}
+                name="vehicleId"
+                value={formData.vehicleId}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 disabled
@@ -229,39 +229,40 @@ const FleetManagementPage: React.FC = () => {
       )}
 
       {/* Fleet Items Table */}
-      {!isLoading && !isError && fleetItems && (
-        <div className="overflow-x-auto shadow-lg rounded-lg">
-          <table className="min-w-full bg-white divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+      <div>
+        <h2 className="text-xl font-bold mb-4">Fleet Items List</h2>
+        {fleetItems && fleetItems.length > 0 ? (
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acquisition Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Depreciation Rate</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Value</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maintenance Cost</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="border border-gray-300 px-4 py-2">Vehicle ID</th>
+                <th className="border border-gray-300 px-4 py-2">Status</th>
+                <th className="border border-gray-300 px-4 py-2">Acquisition Date</th>
+                <th className="border border-gray-300 px-4 py-2">Depreciation Rate</th>
+                <th className="border border-gray-300 px-4 py-2">Current Value</th>
+                <th className="border border-gray-300 px-4 py-2">Maintenance Cost</th>
+                <th className="border border-gray-300 px-4 py-2">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {fleetItems.map((item) => (
+            <tbody>
+              {fleetItems.map(item => (
                 <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.vehicle_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.acquisition_date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.depreciation_rate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.current_value}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.maintenance_cost}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="border border-gray-300 px-4 py-2">{item.vehicleId}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.status}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.acquisition_date}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.depreciation_rate}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.current_value}</td>
+                  <td className="border border-gray-300 px-4 py-2">{item.maintenance_cost}</td>
+                  <td className="border border-gray-300 px-4 py-2">
                     <button
                       onClick={() => handleEditClick(item)}
-                      className="text-indigo-600 hover:text-indigo-900 mr-4"
+                      className="bg-yellow-500 text-white py-1 px-3 rounded mr-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteFleetItem(item.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="bg-red-500 text-white py-1 px-3 rounded"
                     >
                       Delete
                     </button>
@@ -270,8 +271,10 @@ const FleetManagementPage: React.FC = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        ) : (
+          <p>No fleet items found.</p>
+        )}
+      </div>
     </div>
   );
 };

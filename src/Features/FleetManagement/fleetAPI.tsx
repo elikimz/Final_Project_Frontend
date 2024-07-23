@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface FleetManagement {
+  vehicleId: number;
   updated_at: any;
   created_at: any;
   vehicle_id: number;

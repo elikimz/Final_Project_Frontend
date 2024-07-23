@@ -20,6 +20,7 @@ import ManageUsers from './Features/users/ManageUsers'
 import CustomerSupportTicketsPage from './Features/customer_support_ticket/customersupport'
 import  FleetManagementPage from './Features/FleetManagement/fleet'
 import BookingsList from "./Features/Bookings/BookingsQuery"
+import SuccessPage from './Pages/sucess'
 
 
 
@@ -129,7 +130,14 @@ import BookingsList from "./Features/Bookings/BookingsQuery"
         path: 'BookingsList',
         element: <BookingsList/>,
         errorElement: <Error />,
+      },
+      {
+        path: 'SuccessPage',
+        element: <SuccessPage/>,
+        errorElement: <Error />,
       }
+      
+      
       
       
       
