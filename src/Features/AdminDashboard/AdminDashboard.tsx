@@ -79,7 +79,7 @@ const Sidebar = () => {
           </li>
           <li>
             <button
-              onClick={() => handleNavigation('/AddUserForm')}
+              onClick={() => handleNavigation('/AdminProfile')}
               className="block p-4 hover:bg-gray-700 w-full text-left"
             >
               Settings

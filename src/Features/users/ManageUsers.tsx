@@ -1,239 +1,261 @@
-import  { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useGetUsersQuery, useUpdateUserMutation, useDeleteUserMutation, User } from './usersAPI';
-import { useLogoutMutation } from '../login/login.API';
+import { useRegisterUserMutation } from '../register/RegisterAPI'; // Import the correct hook
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// Set the app element to avoid screen readers reading background content
 Modal.setAppElement('#root');
 
-function ManageUsers() {
-  const navigate = useNavigate();
-  const { data: userData, isLoading, isError, refetch } = useGetUsersQuery();
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+const ManageUsers: React.FC = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+  const { data: users, isLoading, isError, refetch } = useGetUsersQuery();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [registerUser] = useRegisterUserMutation(); // Use the correct hook for creating a user
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
     contact_phone: '',
     address: '',
+    role: '',
+    password: '', // Added password field
   });
-  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   useEffect(() => {
     refetch();
   }, [refetch]);
 
-  const openModal = (user: User) => {
+  const openModal = (user: User | null) => {
     setSelectedUser(user);
-    setFormData({
-      full_name: user.full_name,
-      email: user.email,
-      contact_phone: user.contact_phone,
-      address: user.address,
-    });
+    setIsEditMode(user !== null);
+    if (user) {
+      setFormData({
+        full_name: user.full_name,
+        email: user.email,
+        contact_phone: user.contact_phone,
+        address: user.address,
+        role: user.role || '',
+        password: '', // Password should be empty on edit to avoid showing the current password
+      });
+    } else {
+      setFormData({
+        full_name: '',
+        email: '',
+        contact_phone: '',
+        address: '',
+        role: '',
+        password: '', // Clear password on new user creation
+      });
+    }
     setModalIsOpen(true);
-    setUpdateSuccess(false);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
     setSelectedUser(null);
-    setUpdateSuccess(false);
-    setFormData({
-      full_name: '',
-      email: '',
-      contact_phone: '',
-      address: '',
-    });
   };
 
-  const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleUpdate = async () => {
-    if (selectedUser) {
-      await updateUser({ id: selectedUser.id, ...formData });
-      setUpdateSuccess(true);
-      setTimeout(() => {
-        setUpdateSuccess(false);
-        closeModal();
-      }, 1000);
+  const handleSubmit = async () => {
+    try {
+      if (isEditMode && selectedUser) {
+        await updateUser({ id: selectedUser.id, ...formData }).unwrap();
+        toast.success('User updated successfully!');
+      } else {
+        await registerUser(formData).unwrap(); // Use the correct hook for creating a user
+        toast.success('User created successfully!');
+      }
       refetch();
+      closeModal();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('An error occurred. Please try again.');
     }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteUser(id);
-    refetch();
-  };
-
-  const handleLogout = async () => {
-    await logout({});
-    navigate('/login'); // Navigate to the login page after logging out
+    try {
+      await deleteUser(id).unwrap();
+      toast.success('User deleted successfully!');
+      refetch();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('An error occurred while deleting the user.');
+    }
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Main Content */}
-      <div className="w-full p-4">
-        {/* Users Table */}
-        <div className="overflow-x-auto shadow-lg rounded-lg mb-8">
-          <table className="min-w-full divide-y divide-blue-200">
-            <thead className="bg-blue-500 text-white">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">#</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Contact Phone</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Address</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+    <div className="p-4">
+      <ToastContainer />
+      <button
+        onClick={() => navigate('/AdminDashboard')} // Navigate back to dashboard
+        className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Back to Dashboard
+      </button>
+      <button
+        onClick={() => openModal(null)}
+        className="mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Create New User
+      </button>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-800 text-white">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Contact Phone</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Address</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {isLoading ? (
+              <tr><td colSpan={7} className="text-center py-4">Loading...</td></tr>
+            ) : isError ? (
+              <tr><td colSpan={7} className="text-center py-4 text-red-500">Error loading users</td></tr>
+            ) : users?.map((user) => (
+              <tr key={user.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.full_name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.contact_phone}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.address}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button onClick={() => openModal(user)} className="text-blue-600 hover:text-blue-900">Edit</button>
+                  <button onClick={() => handleDelete(Number(user.id))} className="ml-4 text-red-600 hover:text-red-900">Delete</button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 divide-y divide-blue-200">
-              {isLoading ? (
-                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">Loading...</td></tr>
-              ) : isError ? (
-                <tr><td colSpan={7} className="px-6 py-4 whitespace-nowrap text-sm text-red-700">Error loading users.</td></tr>
-              ) : (
-                userData?.map((user, index) => (
-                  <tr key={user.id} className={`bg-${index % 2 === 0 ? 'white' : 'blue-100'} hover:bg-yellow-100`}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{index + 1}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{user.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{user.full_name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{user.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{user.contact_phone}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{user.address}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-900 flex space-x-2">
-                      <button
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700"
-                        onClick={() => openModal(user)}
-                      >
-                        Update
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-                        onClick={() => handleDelete(Number(user.id))}
-                        disabled={isDeleting}
-                      >
-                        {isDeleting ? 'Deleting...' : 'Delete'}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel={isEditMode ? 'Edit User' : 'Add New User'}
+        className="fixed inset-0 flex items-center justify-center p-4 bg-white rounded-lg shadow-lg"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+          <h2 className="text-2xl font-bold mb-4">{isEditMode ? 'Edit User' : 'Add New User'}</h2>
+          <form>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="full_name">
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="contact_phone">
+                Contact Phone
+              </label>
+              <input
+                type="text"
+                id="contact_phone"
+                name="contact_phone"
+                value={formData.contact_phone}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="address">
+                Address
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="role">
+                Role
+              </label>
+              <input
+                type="text"
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="password">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                {isEditMode ? 'Update' : 'Create'}
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-
-        {/* Modal */}
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Update User"
-          className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
-        >
-          <div className="bg-white rounded-lg p-8 max-w-md mx-auto">
-            <h2 className="text-xl font-bold mb-4">Update User</h2>
-
-            {updateSuccess && (
-              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                <p>Update successful!</p>
-              </div>
-            )}
-
-            <form>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="full_name">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="full_name"
-                  value={formData.full_name}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="full_name"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="email"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_phone">
-                  Contact Phone
-                </label>
-                <input
-                  type="text"
-                  name="contact_phone"
-                  value={formData.contact_phone}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="contact_phone"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="address"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={handleUpdate}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  disabled={isUpdating}
-                >
-                  {isUpdating ? 'Updating...' : 'Update'}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
-                >
-                  Close
-                </button>
-              </div>
-            </form>
-          </div>
-        </Modal>
-      </div>
-
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white p-4">
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-          disabled={isLoggingOut}
-        >
-          {isLoggingOut ? 'Logging out...' : 'Logout'}
-        </button>
-      </div>
+      </Modal>
     </div>
   );
-}
+};
 
 export default ManageUsers;

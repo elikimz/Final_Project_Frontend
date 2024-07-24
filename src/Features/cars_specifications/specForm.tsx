@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import  { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   useGetVehicleSpecificationQuery,
   useCreateSpecificationMutation,
@@ -8,7 +9,6 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Make sure this interface matches the API response
 export interface VehicleSpecification {
   rental_rate: number;
   availability: any;
@@ -26,6 +26,7 @@ export interface VehicleSpecification {
 }
 
 function SpecsForm() {
+  const navigate = useNavigate();
   const { data: vehicleSpecifications, isLoading, isError, refetch } = useGetVehicleSpecificationQuery();
   const [createSpecification] = useCreateSpecificationMutation();
   const [updateSpecification] = useUpdateSpecificationMutation();
@@ -85,6 +86,12 @@ function SpecsForm() {
         onClick={openModalForCreate}
       >
         Create New Specification
+      </button>
+      <button
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onClick={() => navigate('/adminDashboard')} // Navigates to AdminDashboard
+      >
+        Go Back 
       </button>
       <ToastContainer />
       {isLoading ? (
@@ -162,7 +169,6 @@ function SpecsForm() {
               }}
               className="flex flex-wrap -mx-2"
             >
-              {/* Form fields here */}
               <div className="w-full md:w-1/2 px-2">
                 <label className="block mb-2">
                   Manufacturer:
@@ -219,9 +225,7 @@ function SpecsForm() {
                   <input
                     type="text"
                     value={currentSpec?.engine_capacity || ''}
-                    onChange={(e) =>
-                      setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })
-                    }
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, engine_capacity: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -233,9 +237,7 @@ function SpecsForm() {
                   <input
                     type="text"
                     value={currentSpec?.transmission || ''}
-                    onChange={(e) =>
-                      setCurrentSpec({ ...currentSpec!, transmission: e.target.value })
-                    }
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, transmission: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -247,9 +249,7 @@ function SpecsForm() {
                   <input
                     type="number"
                     value={currentSpec?.seating_capacity || ''}
-                    onChange={(e) =>
-                      setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })
-                    }
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, seating_capacity: +e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -267,10 +267,11 @@ function SpecsForm() {
                   />
                 </label>
               </div>
-              <div className="w-full px-2">
+              <div className="w-full md:w-1/2 px-2">
                 <label className="block mb-2">
                   Features:
-                  <textarea
+                  <input
+                    type="text"
                     value={currentSpec?.features || ''}
                     onChange={(e) => setCurrentSpec({ ...currentSpec!, features: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
@@ -278,18 +279,7 @@ function SpecsForm() {
                   />
                 </label>
               </div>
-              <div className="w-full px-2">
-                <label className="block mb-2">
-                  Image URL:
-                  <input
-                    type="text"
-                    value={currentSpec?.image_url || ''}
-                    onChange={(e) => setCurrentSpec({ ...currentSpec!, image_url: e.target.value })}
-                    className="block w-full mt-1 border rounded px-2 py-1"
-                  />
-                </label>
-              </div>
-              <div className="w-full px-2">
+              <div className="w-full px-2 mt-4">
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -298,8 +288,8 @@ function SpecsForm() {
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
                   onClick={closeModal}
+                  className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Cancel
                 </button>

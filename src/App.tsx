@@ -25,6 +25,7 @@ import AddUserForm from './Features/users/Adduser'
 import UserProfile from './Pages/userprofile'
 import CurrentBookingsPage from './Pages/booking page'
 import BookingHistoryPage from './Pages/Booking history'
+import AdminProfile from './Pages/AdminProfile'
 
 
 
@@ -160,10 +161,17 @@ import BookingHistoryPage from './Pages/Booking history'
         element: <BookingHistoryPage/>,
         errorElement: <Error />,
       },
+      {
+        path: 'AdminProfile',
+        element: <AdminProfile/>,
+        errorElement: <Error />,
+      },
+      
+      
       
       
    
-      
+     
       
       
       

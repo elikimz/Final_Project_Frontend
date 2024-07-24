@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGetVehiclesQuery, Vehicle } from './vehicleAPI';
 import Navbar from "../../components/navbar";
 
-
-
 const Vehicles: React.FC = () => {
     const { data: vehicles, isLoading, isError } = useGetVehiclesQuery();
+    const [expandedVehicleId, setExpandedVehicleId] = useState<number | null>(null);
 
     const formatCurrency = (value: string) => {
         const numberValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
@@ -16,6 +15,10 @@ const Vehicles: React.FC = () => {
     const handleBookNow = (vehicleId: number, rentalRate: string) => {
         localStorage.setItem("vehicleId", vehicleId.toString());
         localStorage.setItem("rentalRate", rentalRate);
+    };
+
+    const handleToggleDetails = (vehicleId: number) => {
+        setExpandedVehicleId(expandedVehicleId === vehicleId ? null : vehicleId);
     };
 
     if (isLoading) {
@@ -55,15 +58,23 @@ const Vehicles: React.FC = () => {
                                                 <span className="text-gray-800">Availability:</span> {vehicle.availability ? 'Available' : 'Unavailable'}
                                             </p>
                                         </div>
-                                        <div className="space-y-2 text-gray-700">
-                                            <p><strong>Year:</strong> {vehicle.vehicleSpecifications.year}</p>
-                                            <p><strong>Fuel Type:</strong> {vehicle.vehicleSpecifications.fuel_type}</p>
-                                            <p><strong>Engine Capacity:</strong> {vehicle.vehicleSpecifications.engine_capacity}</p>
-                                            <p><strong>Transmission:</strong> {vehicle.vehicleSpecifications.transmission}</p>
-                                            <p><strong>Seating Capacity:</strong> {vehicle.vehicleSpecifications.seating_capacity}</p>
-                                            <p><strong>Color:</strong> {vehicle.vehicleSpecifications.color}</p>
-                                            <p><strong>Features:</strong> {vehicle.vehicleSpecifications.features}</p>
-                                        </div>
+                                        <button
+                                            onClick={() => handleToggleDetails(vehicle.id)}
+                                            className="text-teal-500 hover:underline mb-4"
+                                        >
+                                            {expandedVehicleId === vehicle.id ? 'See Less' : 'See Details'}
+                                        </button>
+                                        {expandedVehicleId === vehicle.id && (
+                                            <div className="space-y-2 text-gray-700">
+                                                <p><strong>Year:</strong> {vehicle.vehicleSpecifications.year}</p>
+                                                <p><strong>Fuel Type:</strong> {vehicle.vehicleSpecifications.fuel_type}</p>
+                                                <p><strong>Engine Capacity:</strong> {vehicle.vehicleSpecifications.engine_capacity}</p>
+                                                <p><strong>Transmission:</strong> {vehicle.vehicleSpecifications.transmission}</p>
+                                                <p><strong>Seating Capacity:</strong> {vehicle.vehicleSpecifications.seating_capacity}</p>
+                                                <p><strong>Color:</strong> {vehicle.vehicleSpecifications.color}</p>
+                                                <p><strong>Features:</strong> {vehicle.vehicleSpecifications.features}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </>
                             )}

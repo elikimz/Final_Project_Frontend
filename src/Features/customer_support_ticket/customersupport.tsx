@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useGetCustomerSupportTicketQuery, useCreateTicketMutation, useDeleteTicketMutation, useUpdateTicketMutation } from './customersupportAPI';
 import { CustomerSupportTickets } from '../../Features/customer_support_ticket/customersupportAPI'; // Adjust the path to where your type is defined
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import styles for Toastify
 
 const CustomerSupportTicketsPage: React.FC = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const { data: tickets, isLoading, isError, refetch } = useGetCustomerSupportTicketQuery();
   const [createTicket, { isLoading: isCreating }] = useCreateTicketMutation();
   const [updateTicket, { isLoading: isUpdating }] = useUpdateTicketMutation();
-  const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
-  
+  const [deleteTicket] = useDeleteTicketMutation();
+
   const [newTicket, setNewTicket] = useState<Partial<CustomerSupportTickets>>({
     subject: '',
     description: '',
@@ -41,6 +43,8 @@ const CustomerSupportTicketsPage: React.FC = () => {
       user_id: Number(userId),
     };
 
+    console.log('Creating ticket with data:', ticketData);
+
     try {
       await createTicket(ticketData).unwrap();
       await refetch();
@@ -61,11 +65,14 @@ const CustomerSupportTicketsPage: React.FC = () => {
 
     const updatedTicketData: Partial<CustomerSupportTickets> = {
       ...selectedTicket,
-      user_id: Number(userId), // Ensure user_id is included and converted to number
+      user_id: Number(userId), // Ensure user_id is taken from local storage
     };
 
+    console.log('Updating ticket with data:', updatedTicketData);
+
     try {
-      await updateTicket(updatedTicketData).unwrap();
+      const response = await updateTicket(updatedTicketData).unwrap();
+      console.log('Update response:', response);
       await refetch();
       setSelectedTicket(null);
       toast.success('Ticket updated successfully!');
@@ -91,6 +98,14 @@ const CustomerSupportTicketsPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">Customer Support Tickets</h1>
 
       <ToastContainer />
+
+      {/* Navigation Button */}
+      <button
+        onClick={() => navigate('/adminDashboard')} // Navigate to AdminDashboard
+        className="bg-gray-500 text-white py-2 px-4 rounded mb-4"
+      >
+        Back Dashboard
+      </button>
 
       {/* Loading and Error Handling */}
       {isLoading && <p className="text-blue-700">Loading tickets...</p>}
@@ -148,7 +163,7 @@ const CustomerSupportTicketsPage: React.FC = () => {
             placeholder="Description"
             value={selectedTicket.description || ''}
             onChange={handleSelectedTicketChange}
-            className="border rounded p-2 mb-2 w-full description-field"
+            className="border rounded p-2 mb-2 w-full"
           />
           <input
             type="text"
@@ -156,7 +171,7 @@ const CustomerSupportTicketsPage: React.FC = () => {
             placeholder="Status"
             value={selectedTicket.status || ''}
             onChange={handleSelectedTicketChange}
-            className="border rounded p-2 mb-2 w-full status-field"
+            className="border rounded p-2 mb-2 w-full"
           />
           <button
             onClick={handleUpdateTicket}
@@ -191,21 +206,21 @@ const CustomerSupportTicketsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.created_at?.toString() || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.updated_at?.toString() || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.user_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.subject || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 description-field">{ticket.description || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 status-field">{ticket.status || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.subject}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.description}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{ticket.status}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <button
                       onClick={() => setSelectedTicket(ticket)}
-                      className="text-blue-500 hover:text-blue-700 mr-2"
+                      className="bg-yellow-500 text-white py-1 px-2 rounded mr-2"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteTicket(ticket.id)}
-                      className="text-red-500 hover:text-red-700"
+                      className="bg-red-500 text-white py-1 px-2 rounded"
                     >
-                      {isDeleting ? 'Deleting...' : 'Delete'}
+                      Delete
                     </button>
                   </td>
                 </tr>

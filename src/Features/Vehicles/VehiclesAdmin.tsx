@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useGetVehiclesQuery, useCreateVehiclesMutation, useUpdateVehiclesMutation, useDeleteVehiclesMutation } from './vehicleAPI';
+import { useNavigate } from 'react-router-dom';
 
 interface VehicleSpecifications {
     id: number;
@@ -24,6 +25,7 @@ interface Vehicle {
 }
 
 const VehiclesAdmin: React.FC = () => {
+    const navigate = useNavigate(); // Initialize useNavigate
     const { data: vehicles, isLoading, isError, refetch } = useGetVehiclesQuery();
     const [createVehicle] = useCreateVehiclesMutation();
     const [updateVehicle] = useUpdateVehiclesMutation();
@@ -95,13 +97,23 @@ const VehiclesAdmin: React.FC = () => {
 
     return (
         <>
-            {/* <Navbar /> */}
             <div className="p-6 bg-gray-100 min-h-screen">
+                {/* Navigation Button */}
+                <div className="mb-6">
+                    <button
+                        onClick={() => navigate('/adminDashboard')}
+                        className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800"
+                    >
+                        Back to Admin Dashboard
+                    </button>
+                </div>
+
                 {popupMessage && (
                     <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
                         {popupMessage}
                     </div>
                 )}
+
                 <form onSubmit={handleCreateOrUpdateVehicle} className="mb-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
