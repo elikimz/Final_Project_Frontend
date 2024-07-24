@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
 import bmw from '../assets/car2.jpg'; // Make sure you have a background image in your assets
+import Footer from '../components/footer'
+//import About from './About'
+import Testimonials from '../components/testimonial'
+import CarGallery from '../Pages/images'
 
 const Home = () => {
+  
   return (
+    <>
+ 
     <div
       className="min-h-screen flex flex-col"
       style={{ 
@@ -36,7 +43,7 @@ const Home = () => {
         </div>
       </section>
 
-      <footer className="w-full py-4 bg-transparent text-center text-white">
+      {/* <footer className="w-full py-4 bg-transparent text-center text-white">
         <div className="container mx-auto">
           <div className="flex justify-center space-x-4 mb-4">
             <a href="#" className="text-gray-700 hover:text-gray-600">
@@ -70,8 +77,13 @@ const Home = () => {
           <div className="text-sm">Follow us on social media</div>
           <div className="text-sm">Contact us: info@kimscarhire.com | +254791337188</div>
         </div>
-      </footer>
+      </footer> */}
     </div>
+    <Testimonials/>
+    <CarGallery/>
+    <Footer/>
+    
+    </>
   );
 };
 
