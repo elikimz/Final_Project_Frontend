@@ -14,7 +14,7 @@ function Users() {
   };
 
   const handleNavigateToVehicles = () => {
-    navigate('/VehiclesPage'); // Navigate to the vehicles page
+    navigate('/Vehicles'); // Navigate to the vehicles page
   };
 
   // const handleNavigateToAccountSettings = () => {
