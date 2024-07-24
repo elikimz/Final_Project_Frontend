@@ -154,6 +154,16 @@ function BookingForm() {
     }
   };
 
+  useEffect(() => {
+    // Listen for the Stripe redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment_status');
+
+    if (paymentStatus === 'succeeded') {
+      navigate('/SuccessPage');
+    }
+  }, [navigate]);
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-teal-600">
@@ -201,25 +211,36 @@ function BookingForm() {
         </label>
         <label className="block mb-6">
           <span className="text-gray-700">Booking Status:</span>
-          <input
-            type="text"
+          <select
             value={currentBooking?.booking_status || ''}
             onChange={(e) =>
               setCurrentBooking({
                 ...currentBooking!,
-                booking_status: e.target.value,
+                booking_status: e.target.value || '',
               })
             }
             className="block w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
             required
-          />
+          >
+            <option value="" disabled>Select Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
         </label>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <button
             type="submit"
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700"
+            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
+          </button>
+          <button
+            type="button"
+            onClick={resetForm}
+            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Reset
           </button>
         </div>
       </form>

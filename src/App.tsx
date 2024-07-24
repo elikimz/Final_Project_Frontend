@@ -32,7 +32,7 @@ import UserProfile from './Pages/userprofile'
     const router = createBrowserRouter([
       {
         path: '/',
-        element: <Home />,
+        element: <Home/>,
         errorElement: <Error />,
       },
       {
