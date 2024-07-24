@@ -1,4 +1,4 @@
-//import React, { useEffect, useState } from 'react';
+//import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbar';
 
@@ -6,15 +6,19 @@ function Users() {
   const navigate = useNavigate();
 
   const handleNavigateToCurrentBookings = () => {
-    navigate('/CustomerSupportTicketsPage'); // Navigate to the current bookings page
+    navigate('/CurrentBookingsPage'); // Navigate to the current bookings page
   };
 
   const handleNavigateToBookingHistory = () => {
-    navigate('/profilemanagement'); // Navigate to the booking history page
+    navigate('/BookingHistoryPage'); // Navigate to the booking history page
+  };
+
+  const handleNavigateToVehicles = () => {
+    navigate('/VehiclesPage'); // Navigate to the vehicles page
   };
 
   // const handleNavigateToAccountSettings = () => {
-  //   navigate('/profilemanagement'); // Navigate to the account settings page
+  //  navigate('/profilemanagement'); // Navigate to the account settings page
   // };
 
   return (
@@ -31,7 +35,7 @@ function Users() {
                   onClick={handleNavigateToCurrentBookings}
                   className="text-white hover:text-gray-400"
                 >
-                Create Ticket
+                  Current Bookings
                 </button>
               </li>
               <li>
@@ -40,6 +44,14 @@ function Users() {
                   className="text-white hover:text-gray-400"
                 >
                   Booking History
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={handleNavigateToVehicles}
+                  className="text-white hover:text-gray-400"
+                >
+                  Vehicles
                 </button>
               </li>
               {/* <li>

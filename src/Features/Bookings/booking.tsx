@@ -120,9 +120,16 @@ function BookingForm() {
         toast.success('Booking created successfully');
       }
 
-      // Persist booking ID to local storage
+      // Persist booking details to local storage
       if (bookingResponse && bookingResponse.id) {
         localStorage.setItem('bookingId', bookingResponse.id.toString());
+        localStorage.setItem('userId', bookingResponse.user_id.toString());
+        localStorage.setItem('vehicleId', bookingResponse.vehicle_id.toString());
+        localStorage.setItem('locationId', bookingResponse.location_id.toString());
+        localStorage.setItem('bookingDate', bookingResponse.booking_date || '');
+        localStorage.setItem('returnDate', bookingResponse.return_date || '');
+        localStorage.setItem('totalAmount', bookingResponse.total_amount.toString());
+        localStorage.setItem('bookingStatus', bookingResponse.booking_status || '');
       } else {
         console.warn('No booking ID returned from response');
       }
@@ -228,21 +235,12 @@ function BookingForm() {
             <option value="cancelled">Cancelled</option>
           </select>
         </label>
-        <div className="flex justify-between">
-          <button
-            type="submit"
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          >
-            {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
-          </button>
-          <button
-            type="button"
-            onClick={resetForm}
-            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Reset
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        >
+          {currentBooking?.id ? 'Update Booking' : 'Create Booking'}
+        </button>
       </form>
       <ToastContainer />
     </div>

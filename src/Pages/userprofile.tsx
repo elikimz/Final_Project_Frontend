@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,6 +20,7 @@ const UserProfile: React.FC = () => {
         address: '',
     });
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Retrieve user details from local storage
@@ -113,6 +115,14 @@ const UserProfile: React.FC = () => {
                     </button>
                 </div>
             </form>
+            <div className="mt-6">
+                <button
+                    onClick={() => navigate('/Vehicles')} // Change '/VehiclesPage' to your vehicles route
+                    className="w-full bg-gray-500 text-white py-2 px-4 rounded-md"
+                >
+                    Back to Booking
+                </button>
+            </div>
             <ToastContainer />
         </div>
     );

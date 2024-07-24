@@ -23,6 +23,8 @@ import BookingsList from "./Features/Bookings/BookingsQuery"
 import SuccessPage from './Pages/sucess'
 import AddUserForm from './Features/users/Adduser'
 import UserProfile from './Pages/userprofile'
+import CurrentBookingsPage from './Pages/booking page'
+import BookingHistoryPage from './Pages/Booking history'
 
 
 
@@ -146,6 +148,16 @@ import UserProfile from './Pages/userprofile'
       {
         path: 'UserProfile',
         element: <UserProfile/>,
+        errorElement: <Error />,
+      },
+      {
+        path: 'CurrentBookingsPage',
+        element: <CurrentBookingsPage/>,
+        errorElement: <Error />,
+      },
+      {
+        path: 'BookingHistoryPage',
+        element: <BookingHistoryPage/>,
         errorElement: <Error />,
       },
       
