@@ -13,9 +13,9 @@ function Users() {
     navigate('/profilemanagement'); // Navigate to the booking history page
   };
 
-  const handleNavigateToAccountSettings = () => {
-    navigate('/profilemanagement'); // Navigate to the account settings page
-  };
+  // const handleNavigateToAccountSettings = () => {
+  //   navigate('/profilemanagement'); // Navigate to the account settings page
+  // };
 
   return (
     <>
@@ -42,14 +42,14 @@ function Users() {
                   Booking History
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   onClick={handleNavigateToAccountSettings}
                   className="text-white hover:text-gray-400"
                 >
                   Account Settings
                 </button>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </aside>

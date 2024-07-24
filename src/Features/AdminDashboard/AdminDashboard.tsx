@@ -87,7 +87,7 @@ const Sidebar = () => {
           </li>
           <li>
             <button
-              onClick={() => handleNavigation('/logout')}
+              onClick={() => handleNavigation('/UserProfile')}
               className="block p-4 hover:bg-gray-700 w-full text-left"
             >
               Logout

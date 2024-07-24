@@ -22,6 +22,7 @@ import  FleetManagementPage from './Features/FleetManagement/fleet'
 import BookingsList from "./Features/Bookings/BookingsQuery"
 import SuccessPage from './Pages/sucess'
 import AddUserForm from './Features/users/Adduser'
+import UserProfile from './Pages/userprofile'
 
 
 
@@ -142,9 +143,14 @@ import AddUserForm from './Features/users/Adduser'
         element: <AddUserForm onUserAdded={() => console.log('User added')} />,
         errorElement: <Error />,
       },
+      {
+        path: 'UserProfile',
+        element: <UserProfile/>,
+        errorElement: <Error />,
+      },
       
       
-      
+   
       
       
       

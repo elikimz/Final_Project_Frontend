@@ -50,7 +50,7 @@ const Navbar = () => {
               <Link to="/Users" className="text-black hover:text-gray-300">Dashboard</Link>
             </li>
             <li>
-              <Link to="/AdminDashboard" className="text-black hover:text-gray-300">Profile</Link>
+              <Link to="/UserProfile" className="text-black hover:text-gray-300">Profile</Link>
             </li>
            
             <li>
