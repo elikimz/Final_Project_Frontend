@@ -12,7 +12,7 @@ import AdminProfile from '../../Pages/AdminProfile';
 const CreateSpecificationContent = () => (
   <div className="bg-white p-4 shadow-md rounded-lg">
     <h2 className="text-xl font-semibold mb-2">Create New Specification</h2>
-    <SpecsForm />
+    <SpecsForm/>
   </div>
 );
 

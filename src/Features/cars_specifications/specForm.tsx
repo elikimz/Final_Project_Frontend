@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useGetVehicleSpecificationQuery,
@@ -9,11 +9,8 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export interface VehicleSpecification {
-  rental_rate: number;
-  availability: any;
-  image_url: string | undefined;
-  id: number;
+interface VehicleSpecification {
+  id?: number;
   manufacturer: string;
   model: string;
   year: number;
@@ -23,9 +20,10 @@ export interface VehicleSpecification {
   seating_capacity: number;
   color: string;
   features: string;
+  image_url?: string;  // Include image_url
 }
 
-function SpecsForm() {
+const SpecsForm: React.FC = () => {
   const navigate = useNavigate();
   const { data: vehicleSpecifications, isLoading, isError, refetch } = useGetVehicleSpecificationQuery();
   const [createSpecification] = useCreateSpecificationMutation();
@@ -35,13 +33,19 @@ function SpecsForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSpec, setCurrentSpec] = useState<VehicleSpecification | null>(null);
 
-  const openModalForUpdate = (spec: VehicleSpecification) => {
-    setCurrentSpec(spec);
-    setIsModalOpen(true);
-  };
-
-  const openModalForCreate = () => {
-    setCurrentSpec(null);
+  const openModal = (spec?: VehicleSpecification) => {
+    setCurrentSpec(spec || {
+      manufacturer: '',
+      model: '',
+      year: new Date().getFullYear(),
+      fuel_type: '',
+      engine_capacity: '',
+      transmission: '',
+      seating_capacity: 0,
+      color: '',
+      features: '',
+      image_url: '', // Include image_url in the default state
+    });
     setIsModalOpen(true);
   };
 
@@ -50,21 +54,27 @@ function SpecsForm() {
     setIsModalOpen(false);
   };
 
-  const handleCreateOrUpdate = async (spec: VehicleSpecification) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentSpec) return;
+
     try {
-      if (spec.id) {
-        await updateSpecification(spec).unwrap();
+      if (currentSpec.id) {
+        // Update existing specification
+        await updateSpecification(currentSpec).unwrap();
         toast.success('Specification updated successfully');
       } else {
-        const createdSpec = await createSpecification(spec).unwrap();
+        // Create new specification
+        const createdSpec = await createSpecification(currentSpec).unwrap();
         toast.success('Specification created successfully');
         localStorage.setItem('vehicleSpecificationId', createdSpec.id.toString());
       }
-      refetch();
+      await refetch(); // Refresh data
       closeModal();
     } catch (error) {
-      console.error('Failed to update/create specification:', error);
-      toast.error('Failed to update/create specification');
+      console.error('Error occurred while saving specification:', error);
+      toast.error('Failed to save specification');
+      closeModal();
     }
   };
 
@@ -72,9 +82,9 @@ function SpecsForm() {
     try {
       await deleteSpecification(id).unwrap();
       toast.success('Specification deleted successfully');
-      refetch();
+      await refetch(); // Refresh data
     } catch (error) {
-      console.error('Failed to delete specification:', error);
+      console.error('Error occurred while deleting specification:', error);
       toast.error('Failed to delete specification');
     }
   };
@@ -83,15 +93,15 @@ function SpecsForm() {
     <div className="overflow-x-auto">
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={openModalForCreate}
+        onClick={() => openModal()}
       >
         Create New Specification
       </button>
       <button
         className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={() => navigate('/adminDashboard')} // Navigates to AdminDashboard
+        onClick={() => navigate('/adminDashboard')}
       >
-        Go Back 
+        Go Back
       </button>
       <ToastContainer />
       {isLoading ? (
@@ -113,13 +123,13 @@ function SpecsForm() {
                     <div>
                       <button
                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
-                        onClick={() => openModalForUpdate(spec)}
+                        onClick={() => openModal(spec)}
                       >
                         Update
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                        onClick={() => handleDelete(spec.id)}
+                        onClick={() => handleDelete(spec.id!)}
                       >
                         Delete
                       </button>
@@ -127,29 +137,19 @@ function SpecsForm() {
                   </div>
                 </div>
                 <div className="p-4 bg-white">
-                  <img
-                    src={spec.image_url}
-                    alt={`${spec.manufacturer} ${spec.model}`}
-                    className="w-full h-40 object-cover mb-4"
-                  />
-                  <p>
-                    <strong>Fuel Type:</strong> {spec.fuel_type}
-                  </p>
-                  <p>
-                    <strong>Engine Capacity:</strong> {spec.engine_capacity}
-                  </p>
-                  <p>
-                    <strong>Transmission:</strong> {spec.transmission}
-                  </p>
-                  <p>
-                    <strong>Seating Capacity:</strong> {spec.seating_capacity}
-                  </p>
-                  <p>
-                    <strong>Color:</strong> {spec.color}
-                  </p>
-                  <p>
-                    <strong>Features:</strong> {spec.features}
-                  </p>
+                  {spec.image_url && (
+                    <img
+                      src={spec.image_url}
+                      alt={`${spec.manufacturer} ${spec.model}`}
+                      className="w-full h-40 object-cover mb-4"
+                    />
+                  )}
+                  <p><strong>Fuel Type:</strong> {spec.fuel_type}</p>
+                  <p><strong>Engine Capacity:</strong> {spec.engine_capacity}</p>
+                  <p><strong>Transmission:</strong> {spec.transmission}</p>
+                  <p><strong>Seating Capacity:</strong> {spec.seating_capacity}</p>
+                  <p><strong>Color:</strong> {spec.color}</p>
+                  <p><strong>Features:</strong> {spec.features}</p>
                 </div>
               </div>
             ))}
@@ -160,24 +160,16 @@ function SpecsForm() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-4 w-full max-w-lg">
             <h2 className="text-xl font-bold mb-2">
-              {currentSpec ? 'Update Vehicle Specification' : 'Create New Vehicle Specification'}
+              {currentSpec?.id ? 'Update Vehicle Specification' : 'Create New Vehicle Specification'}
             </h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreateOrUpdate(currentSpec as VehicleSpecification);
-              }}
-              className="flex flex-wrap -mx-2"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-wrap -mx-2">
               <div className="w-full md:w-1/2 px-2">
                 <label className="block mb-2">
                   Manufacturer:
                   <input
                     type="text"
                     value={currentSpec?.manufacturer || ''}
-                    onChange={(e) =>
-                      setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })
-                    }
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, manufacturer: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
                   />
@@ -267,15 +259,25 @@ function SpecsForm() {
                   />
                 </label>
               </div>
-              <div className="w-full md:w-1/2 px-2">
+              <div className="w-full px-2">
                 <label className="block mb-2">
                   Features:
-                  <input
-                    type="text"
+                  <textarea
                     value={currentSpec?.features || ''}
                     onChange={(e) => setCurrentSpec({ ...currentSpec!, features: e.target.value })}
                     className="block w-full mt-1 border rounded px-2 py-1"
                     required
+                  />
+                </label>
+              </div>
+              <div className="w-full md:w-1/2 px-2">
+                <label className="block mb-2">
+                  Image URL:
+                  <input
+                    type="text"
+                    value={currentSpec?.image_url || ''}
+                    onChange={(e) => setCurrentSpec({ ...currentSpec!, image_url: e.target.value })}
+                    className="block w-full mt-1 border rounded px-2 py-1"
                   />
                 </label>
               </div>
@@ -284,12 +286,12 @@ function SpecsForm() {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
-                  {currentSpec ? 'Update' : 'Create'}
+                  {currentSpec?.id ? 'Update Specification' : 'Create Specification'}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
                 >
                   Cancel
                 </button>
@@ -300,6 +302,6 @@ function SpecsForm() {
       )}
     </div>
   );
-}
+};
 
 export default SpecsForm;
