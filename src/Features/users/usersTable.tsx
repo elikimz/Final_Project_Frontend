@@ -1,92 +1,113 @@
-//import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import Navbar from '../../components/navbar';
+import CurrentBookings from '../../Pages/Booking history';
+import BookingHistory from '../../Pages/booking page';
+import Vehicles from '../../Features/Vehicles/vehicle';
+import UserProfile from '../../Pages/userprofile';
 
-function Users() {
-  const navigate = useNavigate();
+// Define components for each section
+const CurrentBookingsContent = () => (
+  <div className="bg-white p-4 shadow-md rounded-lg">
+    <h2 className="text-xl font-semibold mb-2">Current Bookings</h2>
+    <CurrentBookings />
+  </div>
+);
 
-  const handleNavigateToCurrentBookings = () => {
-    navigate('/CurrentBookingsPage'); // Navigate to the current bookings page
+const BookingHistoryContent = () => (
+  <div className="bg-white p-4 shadow-md rounded-lg">
+    <h2 className="text-xl font-semibold mb-2">Booking History</h2>
+    <BookingHistory />
+  </div>
+);
+
+const VehiclesContent = () => (
+  <div className="bg-white p-4 shadow-md rounded-lg">
+    <h2 className="text-xl font-semibold mb-2">Vehicles</h2>
+    <Vehicles />
+  </div>
+);
+
+const UserProfileContent = () => (
+  <div className="bg-white p-4 shadow-md rounded-lg">
+    <h2 className="text-xl font-semibold mb-2">My Profile</h2>
+    <UserProfile />
+  </div>
+);
+
+const Sidebar = ({ onSelect }: { onSelect: (section: string) => void }) => {
+  return (
+    <aside className="w-64 bg-green-900 text-white h-full shadow-md flex-shrink-0 overflow-y-auto">
+      <div className="p-4 text-2xl font-bold">Dashboard</div>
+      <nav className="mt-6">
+        <ul>
+          <li>
+            <button
+              onClick={() => onSelect('bookingHistory')}
+              className="block p-4 hover:bg-green-700 w-full text-left"
+            >
+              Current Bookings 
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => onSelect('currentBookings')}
+              className="block p-4 hover:bg-green-700 w-full text-left"
+            >
+              Booking History
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => onSelect('vehicles')}
+              className="block p-4 hover:bg-green-700 w-full text-left"
+            >
+              Vehicles
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => onSelect('profile')}
+              className="block p-4 hover:bg-green-700 w-full text-left"
+            >
+              My Profile
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
+};
+
+const Users = () => {
+  const [activeSection, setActiveSection] = useState<string>('currentBookings');
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'currentBookings':
+        return <CurrentBookingsContent />;
+      case 'bookingHistory':
+        return <BookingHistoryContent />;
+      case 'vehicles':
+        return <VehiclesContent />;
+      case 'profile':
+        return <UserProfileContent />;
+      default:
+        return <div className="bg-white p-4 shadow-md rounded-lg">Select an option from the sidebar</div>;
+    }
   };
-
-  const handleNavigateToBookingHistory = () => {
-    navigate('/BookingHistoryPage'); // Navigate to the booking history page
-  };
-
-  const handleNavigateToVehicles = () => {
-    navigate('/Vehicles'); // Navigate to the vehicles page
-  };
-
-  // const handleNavigateToAccountSettings = () => {
-  //  navigate('/profilemanagement'); // Navigate to the account settings page
-  // };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen flex">
-        {/* Sidebar Navigation */}
-        <aside className="w-1/4 bg-green-900 shadow-md text-white p-4">
-          <div className="text-2xl font-bold mb-8">Dashboard</div>
-          <nav>
-            <ul className="space-y-4">
-              <li>
-                <button
-                  onClick={handleNavigateToCurrentBookings}
-                  className="text-white hover:text-gray-400"
-                >
-                  Current Bookings
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={handleNavigateToBookingHistory}
-                  className="text-white hover:text-gray-400"
-                >
-                  Booking History
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={handleNavigateToVehicles}
-                  className="text-white hover:text-gray-400"
-                >
-                  Vehicles
-                </button>
-              </li>
-              {/* <li>
-                <button
-                  onClick={handleNavigateToAccountSettings}
-                  className="text-white hover:text-gray-400"
-                >
-                  Account Settings
-                </button>
-              </li> */}
-            </ul>
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <div className="w-3/4 p-4">
-          {/* Overview Section */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="bg-green-100 shadow-md rounded-lg p-4">
-              <h3 className="text-lg font-bold">Current Bookings</h3>
-              <p>Summary of current bookings...</p>
-            </div>
-            <div className="bg-blue-100 shadow-md rounded-lg p-4">
-              <h3 className="text-lg font-bold">Booking History</h3>
-              <p>Summary of past bookings...</p>
-            </div>
-            <div className="bg-purple-100 shadow-md rounded-lg p-4">
-              <h3 className="text-lg font-bold">Account Settings</h3>
-              <p>Summary of account settings...</p>
-            </div>
-          </div>
-        </div>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar onSelect={setActiveSection} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar />
+        <main className="flex-1 p-6 overflow-auto">
+          <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
+          {renderContent()}
+        </main>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default Users;

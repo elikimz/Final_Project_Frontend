@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,7 +20,7 @@ const AdminProfile: React.FC = () => {
         role: '', // Admin role
     });
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     useEffect(() => {
         // Retrieve admin details from local storage
@@ -137,14 +137,14 @@ const AdminProfile: React.FC = () => {
                     </button>
                 </div>
             </form>
-            <div className="mt-6">
+            {/* <div className="mt-6">
                 <button
                     onClick={() => navigate('/Vehicles')} // Adjust navigation as needed
                     className="w-full bg-gray-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700 transition-colors duration-300"
                 >
                     Back to Booking
                 </button>
-            </div>
+            </div> */}
             <ToastContainer />
         </div>
     );

@@ -11,7 +11,7 @@ const SuccessPage: React.FC = () => {
         <p className="text-lg text-gray-700 mb-6">Thank you for your booking. Your payment was processed successfully.</p>
         <button
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-          onClick={() => navigate('/Home')}
+          onClick={() => navigate('/')}
         >
           Go to Homepage
         </button>
