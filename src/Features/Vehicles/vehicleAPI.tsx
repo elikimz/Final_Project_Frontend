@@ -11,15 +11,15 @@ export interface Vehicle {
 
 export const VehicleAPI = createApi({
     reducerPath: 'VehicleAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }),
     endpoints: (builder) => ({
         getVehicles: builder.query<Vehicle[], void>({
-            query: () => 'Vehicles', // Make sure this matches your API endpoint
+            query: () => 'vehicles', // Make sure this matches your API endpoint
             //providesTags: ['Vehicle']
         }),
         createVehicles: builder.mutation<Vehicle, Partial<Vehicle>>({
             query: (newVehicle) => ({
-                url: 'Vehicles',
+                url: 'vehicles',
                 method: 'POST',
                 body: newVehicle
             }),
@@ -27,7 +27,7 @@ export const VehicleAPI = createApi({
         }),
         updateVehicles: builder.mutation<Vehicle, Partial<Vehicle> & { id: number }>({
             query: ({ id, ...updatedVehicles }) => ({
-                url: `Vehicles/${id}`,
+                url: `vehicles/${id}`,
                 method: 'PUT',
                 body: updatedVehicles
             }),
@@ -35,7 +35,7 @@ export const VehicleAPI = createApi({
         }),
         deleteVehicles: builder.mutation<void, number>({
             query: (id) => ({
-                url: `Vehicles/${id}`,
+                url: `vehicles/${id}`,
                 method: 'DELETE'
             }),
             //invalidatesTags: ['Vehicle']

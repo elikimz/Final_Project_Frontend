@@ -12,15 +12,15 @@ export interface CustomerSupportTickets{
 
 export const CustomerSupportTicketsAPI = createApi({
     reducerPath: 'customerSupportTicketsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }),
     endpoints: (builder) => ({
         getCustomerSupportTicket: builder.query<CustomerSupportTickets[], void>({
-            query: () => 'CustomerSupportTickets',
+            query: () => 'customersupport',
             // providesTags: ['getTicketsTag'],
         }),
         createTicket: builder.mutation<CustomerSupportTickets, Partial<CustomerSupportTickets>>({
             query: (newTicket) => ({
-                url: 'CustomerSupportTickets',
+                url: 'customersupport',
                 method: 'POST',
                 body: newTicket,
                 // providesTags: ['createTicketTags'],
@@ -29,7 +29,7 @@ export const CustomerSupportTicketsAPI = createApi({
         }),
         deleteTicket: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
-                url: `CustomerSupportTickets/${id}`,
+                url: `customersupport/${id}`,
                 method: 'DELETE',
                 // providesTags: ['deleteTicketTags'],
             }),
@@ -37,7 +37,7 @@ export const CustomerSupportTicketsAPI = createApi({
         }),
         updateTicket: builder.mutation<CustomerSupportTickets, Partial<CustomerSupportTickets>>({
             query: ({ id, ...rest }) => ({
-                url: `CustomerSupportTickets/${id}`,
+                url: `customersupport/${id}`,
                 method: 'PUT',
                 body: rest,
                 // providesTags: ['updateTicketTags'],

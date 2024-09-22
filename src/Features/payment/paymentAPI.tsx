@@ -15,7 +15,7 @@ export interface Payment {
 
 export const PaymentsAPI = createApi({
   reducerPath: 'paymentsAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }), // Update with your actual API base URL
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }), // Update with your actual API base URL
   endpoints: (builder) => ({
     getPayments: builder.query<Payment[], void>({
       query: () => 'payments',

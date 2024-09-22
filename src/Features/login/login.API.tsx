@@ -19,7 +19,7 @@ export interface LoggedInUser {
 
 export const loginAPI = createApi({
     reducerPath: 'loginAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/auth/' }),
     endpoints: (builder) => ({
         loginUser: builder.mutation<logInUser, Partial<logInUser>>({
             query: (user) => ({

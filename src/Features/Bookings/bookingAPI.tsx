@@ -15,7 +15,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const BookingAPI = createApi({
     reducerPath: 'bookingAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }),
     endpoints: (builder) => ({
         getBooking: builder.query<Booking[], void>({
             query: () => 'c',

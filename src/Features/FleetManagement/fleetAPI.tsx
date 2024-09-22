@@ -18,15 +18,15 @@ export interface FleetManagement {
 
 export const FleetManagementAPI = createApi({
   reducerPath: 'fleetManagementAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/'}),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/'}),
   endpoints: (builder) => ({
     getFleetItems: builder.query<FleetManagement[], void>({
-      query: () => 'FleetManagement',
+      query: () => 'fleetmanagement',
       //providesTags: ['FleetManagement'],
     }),
     createFleetItem: builder.mutation<FleetManagement, Partial<FleetManagement>>({
       query: (newItem) => ({
-        url: 'FleetManagement',
+        url: 'fleetmanagement',
         method: 'POST',
         body: newItem,
         providesTags: ['FleetManagement'],
@@ -35,7 +35,7 @@ export const FleetManagementAPI = createApi({
     }),
     deleteFleetItem: builder.mutation<{ success: boolean }, number>({
       query: (id) => ({
-        url: `FleetManagement/${id}`,
+        url: `fleetmanagement/${id}`,
         method: 'DELETE',
         providesTags: ['FleetManagement'],
       }),
@@ -43,7 +43,7 @@ export const FleetManagementAPI = createApi({
     }),
     updateFleetItem: builder.mutation<FleetManagement, Partial<FleetManagement> & { id: number }>({
       query: ({ id, ...rest }) => ({
-        url: `FleetManagement/${id}`,
+        url: `fleetmanagement/${id}`,
         method: 'PUT',
         body: rest,
         providesTags: ['FleetManagement'],

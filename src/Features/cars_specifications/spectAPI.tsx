@@ -18,15 +18,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const SpecsAPI = createApi({
     reducerPath: 'SpecsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }),
     endpoints: (builder) => ({
         getVehicleSpecification: builder.query<VehicleSpecification[], void>({
-            query: () => 'vehicalspecification',
+            query: () => 'vehiclespecifications',
             //  providesTags: ['getVehicleSpecificationsTag'],
         }),
         createSpecification: builder.mutation<VehicleSpecification, Partial<VehicleSpecification>>({
             query: (newSpecifications) => ({
-                url: 'vehicalspecification',
+                url: 'vehiclespecifications',
                 method: 'POST',
                 body: newSpecifications,
                 providesTags: ['createSpecificationsTags'],
@@ -35,7 +35,7 @@ export const SpecsAPI = createApi({
         }),
         deleteSpecification: builder.mutation<{ success: boolean }, number>({
             query: (id) => ({
-                url: `vehicalspecifications/${id}`,
+                url: `vehiclespecifications/${id}`,
                 method: 'DELETE',
                 providesTags: ['deleteSpecificationsTags'],
             }),
@@ -43,7 +43,7 @@ export const SpecsAPI = createApi({
         }),
         updateSpecification: builder.mutation<VehicleSpecification, Partial<VehicleSpecification>>({
             query: ({ id, ...rest }) => ({
-                url: `vehicalspecification/${id}`,
+                url: `vehiclespecifications/${id}`,
                 method: 'PUT',
                 body: rest,
                 providesTags: ['updateSpecificationsTags'],

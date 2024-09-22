@@ -12,14 +12,14 @@ export interface Location {
 
 export const LocationAPI = createApi({
     reducerPath: 'LocationsAPI',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://final-project-hono-z02i.onrender.com/' }),
     endpoints: (builder) => ({
         getLocations: builder.query<Location[], void>({
-            query: () => 'Locations',
+            query: () => 'locations',
         }),
         createLocation: builder.mutation<Location, Partial<Location>>({
             query: (newLocation) => ({
-                url: 'Locations',
+                url: 'locations',
                 method: 'POST',
                 body: newLocation,
             }),
