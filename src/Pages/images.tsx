@@ -36,23 +36,23 @@ const cars = [
 
 const CarGallery: React.FC = () => {
   return (
-    <section className="py-17 bg-gray-100">
+    <section className="py-30 bg-gray-100">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">Our Cars</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cars.map((car, index) => (
             <div
               key={index}
-              className="bg-white shadow- rounded-lg overflow-hidden transition-transform duration-300 transform hover:scale-105"
+              className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300 transform hover:scale-105"
             >
               <img
                 src={car.image}
                 alt={car.name}
-                className="w-full h-32 object-cover" // Set a smaller height
+                className="w-full h-48 object-contain bg-gray-200" // Ensures the whole image fits
               />
-              <div className="p-3"> {/* Adjusted padding for a more compact layout */}
-                <h3 className="text-lg font-semibold mb-1">{car.name}</h3> {/* Reduced font size */}
-                <p className="text-gray-600 text-xs">{car.description}</p> {/* Smaller description text */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-1">{car.name}</h3>
+                <p className="text-gray-600 text-sm">{car.description}</p>
               </div>
             </div>
           ))}
