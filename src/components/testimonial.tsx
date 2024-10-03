@@ -1,4 +1,3 @@
-// src/components/Testimonials.tsx
 import React from 'react';
 
 interface Testimonial {
@@ -29,16 +28,19 @@ const Testimonials: React.FC = () => {
   return (
     <div className="bg-gray-100 p-8">
       <h2 className="text-2xl font-bold text-center mb-6">What Our Customers Say</h2>
-      <div className="flex flex-wrap justify-center space-x-4 space-y-4">
+      <div className="flex flex-wrap justify-center gap-4"> {/* Reduced gap between testimonials */}
         {testimonials.map((testimonial, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-lg w-64">
+          <div
+            key={index}
+            className="bg-white p-4 rounded-lg shadow-md w-56 transform transition-transform duration-300 hover:scale-105 hover:shadow-lg" // Smaller width and padding
+          >
             <img
               src={testimonial.photo}
               alt={testimonial.name}
-              className="w-24 h-24 rounded-full mx-auto mb-4"
+              className="w-20 h-20 rounded-full mx-auto mb-3 shadow-md" // Smaller image size
             />
-            <p className="text-lg font-semibold text-center">{testimonial.name}</p>
-            <p className="text-gray-600 text-center mt-2">{testimonial.message}</p>
+            <p className="text-md font-semibold text-center">{testimonial.name}</p>
+            <p className="text-gray-600 text-center text-sm mt-1">{testimonial.message}</p> {/* Smaller text size */}
           </div>
         ))}
       </div>

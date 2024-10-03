@@ -1,26 +1,13 @@
-import { Link } from "react-router-dom";
-
+//import { Link } from "react-router-dom";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 const Contact = () => {
   return (
-    <div>
-      {/* Header Section */}
-      <header className="w-full py-4 bg-white shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-gray-800">KimExpress Car Hire</div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li><Link to="/" className="text-gray-800 hover:text-gray-600">Home</Link></li>
-              <li><Link to="/about" className="text-gray-800 hover:text-gray-600">About</Link></li>
-              <li><Link to="/contact" className="text-gray-800 hover:text-gray-600">Contact</Link></li>
-              <li><Link to="/register" className="text-gray-800 hover:text-gray-600">Register</Link></li>
-              <li><Link to="/login" className="text-gray-800 hover:text-gray-600">Login</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
+    <>
+    <Navbar />
+        
       {/* Contact Form Section */}
-      <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Us</h2>
         <p className="text-gray-700 mb-6 text-center">
           Have questions or want to get in touch? Feel free to reach out to us using the form below.
@@ -65,12 +52,10 @@ const Contact = () => {
             Send Message
           </button>
         </div>
-        <div className="mt-6 text-center text-gray-600">
-          <p>Or reach us via email at <span className="font-bold">info@kimscarhire.com</span></p>
-          <p>Follow us on <span className="font-bold">Facebook</span> and <span className="font-bold">Twitter</span> for updates!</p>
-        </div>
+      
       </div>
-    </div>
+    <Footer/>
+    </>
   );
 };
 

@@ -1,50 +1,43 @@
 import { Link } from "react-router-dom";
-import bmw from '../assets/car2.jpg'; // Make sure you have a background image in your assets
-import Footer from '../components/footer';
-import Testimonials from '../components/testimonial';
-import CarGallery from '../Pages/images';
+import bmw from '../assets/car2.jpg'; // Ensure this image exists in your assets
+import Footer from '../components/footer'; // Footer component
+import CarGallery from '../Pages/images'; // CarGallery for displaying images
+import Navbar from "../components/navbar";
+//import Testimonials from "../components/testimonial";
 
 const Home = () => {
   return (
     <>
+      <Navbar />
       <div
-        className="min-h-screen flex flex-col"
-        style={{ 
-          backgroundImage: `url(${bmw})`, 
-          backgroundSize: 'cover', 
-          backgroundPosition: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)' // Add a semi-transparent black overlay for better visibility
+        className="min-h-screen flex flex-col justify-center"
+        style={{
+          backgroundImage: `url(${bmw})`,
+          backgroundSize: 'cover', // Ensures the image covers the whole area
+          backgroundPosition: 'center', // Centers the image
+          backgroundRepeat: 'no-repeat', // Prevents image repetition
+          backgroundBlendMode: 'overlay',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)', // Overlay for better visibility of content
         }}
       >
-        <header className="w-full py-4 bg-transparent">
-          <div className="container mx-auto flex justify-between items-center">
-            <div className="flex items-center">
-              <img src="data:image/png;base64,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" alt="Company Logo" className="h-12 w-12 mr-2" /> {/* Replace with your logo URL */}
-              <div className="text-2xl font-bold text-white">Kim Express Car Hire</div>
-            </div>
-            <nav>
-              <ul className="flex space-x-6">
-                <li><Link to="/" className="text-white hover:text-gray-300">Home</Link></li>
-                <li><Link to="/about" className="text-white hover:text-gray-300">About</Link></li>
-                <li><Link to="/contact" className="text-white hover:text-gray-300">Contact</Link></li>
-                <li><Link to="/register" className="text-white hover:text-gray-300">Register</Link></li>
-                <li><Link to="/login" className="text-white hover:text-gray-300">Login</Link></li>
-                {/* <li><Link to="/admin/login" className="text-white hover:text-gray-300">Admin</Link></li> */}
-              </ul>
-            </nav>
-          </div>
-        </header>
-
-        <section className="flex-grow flex items-center justify-center">
-          <div className="bg-white bg-opacity-90 p-10 rounded-lg shadow-lg max-w-xl mx-auto text-center">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Kim Express Car Hire</h1>
-            <p className="text-gray-600 mb-8">Your trusted vehicle rental service for all occasions. Book your ride today and experience seamless, stress-free travel.</p>
-            <Link to="/Register" className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">Book Now</Link>
-          </div>
-        </section>
+        {/* Main Content */}
+        <main className="container mx-auto px-8 text-white flex flex-col items-center justify-center flex-grow py-16">
+          <h2 className="text-5xl font-extrabold mb-8 text-center">Welcome to the Car Management System</h2>
+          <p className="text-xl mb-10 text-center">Manage, track, and maintain your car's data effortlessly.</p>
+          <Link
+            to="/register"
+            className="bg-blue-500 text-white px-8 py-4 rounded-full hover:bg-blue-600 transition duration-300 text-xl"
+          >
+            Get Started
+          </Link>
+        </main>
       </div>
-      <Testimonials />
-      <CarGallery />
+
+      {/* Car Gallery */}
+      {/* <section className="py-16 bg-gray-800 bg-opacity-70">
+       
+      </section> */}
+ <CarGallery />
       <Footer />
     </>
   );

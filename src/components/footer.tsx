@@ -2,11 +2,11 @@
 
 function Footer() {
     return (
-        <footer className="w-full py-4 bg-white text-black">
+        <footer className="w-full py-1 bg-primary text-white"> {/* Reduced padding */}
             <div className="container mx-auto text-center">
-                <div className="flex justify-center space-x-6 mb-2">
-                    <a href="#" className="text-gray-500 hover:text-black">
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <div className="flex justify-center space-x-2 mb-1"> {/* Further reduced spacing */}
+                    <a href="#" className="text-gray-400 hover:text-white">
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"> {/* Reduced icon size */}
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
@@ -14,8 +14,8 @@ function Footer() {
                             />
                         </svg>
                     </a>
-                    <a href="#" className="text-gray-500 hover:text-black">
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="#" className="text-gray-400 hover:text-white">
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
@@ -23,8 +23,8 @@ function Footer() {
                             />
                         </svg>
                     </a>
-                    <a href="#" className="text-gray-500 hover:text-black">
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="#" className="text-gray-400 hover:text-white">
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
@@ -32,8 +32,8 @@ function Footer() {
                             />
                         </svg>
                     </a>
-                    <a href="#" className="text-gray-500 hover:text-black">
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="#" className="text-gray-400 hover:text-white">
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
@@ -42,13 +42,15 @@ function Footer() {
                         </svg>
                     </a>
                 </div>
-                <div className="mb-2">
+                <div className="mb-1 text-sm"> {/* Reduced font size */}
                     <p>Follow us on social media</p>
                 </div>
-                <div className="mb-2">
-                    <p>Contact us: <a href="mailto:info@kimscarhire.com" className="underline">info@kimscarhire.com</a> | +254791337188</p>
+                <div className="mb-1 text-sm"> {/* Reduced font size */}
+                    <p>
+                        Contact us: <a href="mailto:info@kimscarhire.com" className="underline">info@kimscarhire.com</a> | +254791337188
+                    </p>
                 </div>
-                <div className="mb-2">
+                <div className="mb-1 text-sm"> {/* Reduced font size */}
                     <p>&copy; {new Date().getFullYear()} Kim's Car Hire. All rights reserved.</p>
                 </div>
             </div>

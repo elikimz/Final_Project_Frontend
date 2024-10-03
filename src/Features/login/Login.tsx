@@ -1,8 +1,9 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./login.API"; // Adjust the path accordingly
 import { CircularProgress } from '@mui/material'; // Make sure to install @mui/material if not already
-
+import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,28 +65,15 @@ const Login = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="w-full py-4 bg-gray-900 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-white">KimExpress Car Hire</div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li><Link to="/" className="text-gray-200 hover:text-gray-100">Home</Link></li>
-              <li><Link to="/about" className="text-gray-200 hover:text-gray-100">About</Link></li>
-              <li><Link to="/contact" className="text-gray-200 hover:text-gray-100">Contact</Link></li>
-              <li><Link to="/register" className="text-gray-200 hover:text-gray-100">Register</Link></li>
-              <li><Link to="/login" className="text-gray-200 hover:text-gray-100">Login</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
+     
       {/* Login Form Section */}
-      <div className="min-h-screen flex items-center justify-center bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-400 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">Sign in to your account</h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
@@ -98,7 +86,7 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#d3ba3c] focus:border-[#d3ba3c] focus:z-10 sm:text-sm"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -112,7 +100,7 @@ const Login = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#d3ba3c] focus:border-[#d3ba3c] focus:z-10 sm:text-sm"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -126,7 +114,7 @@ const Login = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#d3ba3c] focus:ring-[#d3ba3c] border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
                   Remember me
@@ -134,7 +122,7 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link to="#" className="font-medium text-[#d3ba3c] hover:text-[#c3a52f]">
                   Forgot your password?
                 </Link>
               </div>
@@ -143,7 +131,7 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#d3ba3c] hover:bg-[#c3a52f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d3ba3c]"
                 disabled={isLoading}
               >
                 {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign in'}
@@ -160,6 +148,8 @@ const Login = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 
